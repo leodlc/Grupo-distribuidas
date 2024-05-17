@@ -78,6 +78,9 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
             txtBoxResp.Text = resultado.ToString();
         }
 
-        
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
