@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
         public Form1()
         {
             InitializeComponent();
+            AplicarEstilos();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -78,6 +80,39 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
             txtBoxResp.Text = resultado.ToString();
         }
 
-        
+        private void AplicarEstilos()
+        {
+            // Fondo principal
+            this.BackColor = ColorTranslator.FromHtml("#E0F7FA");
+
+            // Colores de texto de etiquetas
+            lblNum1.ForeColor = ColorTranslator.FromHtml("#333333");
+            lblNum2.ForeColor = ColorTranslator.FromHtml("#333333");
+            lvlResp.ForeColor = ColorTranslator.FromHtml("#333333");
+            lblBy.ForeColor = ColorTranslator.FromHtml("#333333");
+            lblLeo.ForeColor = ColorTranslator.FromHtml("#333333");
+            lblCarlos.ForeColor = ColorTranslator.FromHtml("#333333");
+            lblSanti.ForeColor = ColorTranslator.FromHtml("#333333");
+            lblTitle.ForeColor = ColorTranslator.FromHtml("#00BFFF");
+
+            // Estilo de botones
+            btnSumar.BackColor = ColorTranslator.FromHtml("#80CBC4");
+            btnSumar.ForeColor = Color.White;
+            btnRestar.BackColor = ColorTranslator.FromHtml("#80CBC4");
+            btnRestar.ForeColor = Color.White;
+            btnMultiplicar.BackColor = ColorTranslator.FromHtml("#80CBC4");
+            btnMultiplicar.ForeColor = Color.White;
+            btnDividir.BackColor = ColorTranslator.FromHtml("#80CBC4");
+            btnDividir.ForeColor = Color.White;
+
+            // Estilo del cuadro de respuesta
+            txtBoxResp.BackColor = Color.White;
+            txtBoxResp.BorderStyle = BorderStyle.FixedSingle;
+            txtBoxResp.ForeColor = ColorTranslator.FromHtml("#333333");
+        }
+
+
+
+
     }
 }
