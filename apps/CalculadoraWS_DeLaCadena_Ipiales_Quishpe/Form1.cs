@@ -82,5 +82,17 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Calculator nuevoFormulario = new Calculator();
+
+            // Cierra el formulario actual
+
+            // Abre el nuevo formulario
+            nuevoFormulario.Show();
+            this.Hide();
+
+        }
     }
 }
