@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
@@ -6,10 +7,6 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
     public partial class Calculator : Form
     {
         private string input = string.Empty; // Almacena la entrada del usuario
-        private string operador1 = string.Empty; // Almacena el primer operando
-        private string operand2 = string.Empty; // Almacena el segundo operando
-        private char operation; // Almacena el operador
-        private int result = 0; // Almacena el resultado
 
         public Calculator()
         {
@@ -34,38 +31,15 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
         private void btnOperator_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            operador1 = input;
-            operation = button.Text[0];
-            input = string.Empty;
             this.txtIngresoSalida.Text += button.Text;
+            input += button.Text;
         }
 
         private void btnCalcular_Click(object sender, EventArgs e)
         {
-            operand2 = input;
-            int num1, num2;
-            int.TryParse(operador1, out num1);
-            int.TryParse(operand2, out num2);
-
-            Calcular calcular = new Calcular();
-
             try
             {
-                switch (operation)
-                {
-                    case '+':
-                        result = calcular.Suma(num1, num2);
-                        break;
-                    case '-':
-                        result = calcular.Resta(num1, num2);
-                        break;
-                    case 'X':
-                        result = calcular.Multiplicar(num1, num2);
-                        break;
-                    case '/':
-                        result = calcular.Dividir(num1, num2);
-                        break;
-                }
+                var result = EvaluateExpression(input);
                 this.txtIngresoSalida.Text = result.ToString();
                 input = result.ToString();
             }
@@ -74,8 +48,6 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
                 MessageBox.Show(ex.Message);
                 this.txtIngresoSalida.Clear();
                 input = string.Empty;
-                operador1 = string.Empty;
-                operand2 = string.Empty;
             }
         }
 
@@ -83,26 +55,14 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
         {
             this.txtIngresoSalida.Clear();
             this.input = string.Empty;
-            this.operador1 = string.Empty;
-            this.operand2 = string.Empty;
         }
 
         private void Calculator_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsDigit(e.KeyChar))
+            if (char.IsDigit(e.KeyChar) || e.KeyChar == '+' || e.KeyChar == '-' || e.KeyChar == 'X' || e.KeyChar == '/' || e.KeyChar == '.')
             {
                 this.txtIngresoSalida.Text += e.KeyChar;
                 input += e.KeyChar;
-            }
-            else if (e.KeyChar == '+' || e.KeyChar == '-' || e.KeyChar == 'X' || e.KeyChar == '/')
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    operador1 = input;
-                    operation = e.KeyChar;
-                    input = string.Empty;
-                    this.txtIngresoSalida.Text += e.KeyChar;
-                }
             }
             else if (e.KeyChar == '=' || e.KeyChar == '\r')
             {
@@ -117,6 +77,99 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
                         input = input.Substring(0, input.Length - 1);
                 }
             }
+        }
+
+        private int EvaluateExpression(string expression)
+        {
+            expression = expression.Replace("X", "*");
+
+            var tokens = ParseExpression(expression);
+            return CalculateResult(tokens);
+        }
+
+        private List<string> ParseExpression(string expression)
+        {
+            var tokens = new List<string>();
+            string number = string.Empty;
+
+            foreach (char c in expression)
+            {
+                if (char.IsDigit(c))
+                {
+                    number += c;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(number))
+                    {
+                        tokens.Add(number);
+                        number = string.Empty;
+                    }
+                    tokens.Add(c.ToString());
+                }
+            }
+
+            if (!string.IsNullOrEmpty(number))
+            {
+                tokens.Add(number);
+            }
+
+            return tokens;
+        }
+
+        private int CalculateResult(List<string> tokens)
+        {
+            Calcular calcular = new Calcular();
+
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                if (tokens[i] == "*" || tokens[i] == "/")
+                {
+                    int num1 = int.Parse(tokens[i - 1]);
+                    int num2 = int.Parse(tokens[i + 1]);
+                    int result = 0;
+
+                    if (tokens[i] == "*")
+                    {
+                        result = calcular.Multiplicar(num1, num2);
+                    }
+                    else if (tokens[i] == "/")
+                    {
+                        result = calcular.Dividir(num1, num2);
+                    }
+
+                    tokens[i - 1] = result.ToString();
+                    tokens.RemoveAt(i);
+                    tokens.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                if (tokens[i] == "+" || tokens[i] == "-")
+                {
+                    int num1 = int.Parse(tokens[i - 1]);
+                    int num2 = int.Parse(tokens[i + 1]);
+                    int result = 0;
+
+                    if (tokens[i] == "+")
+                    {
+                        result = calcular.Suma(num1, num2);
+                    }
+                    else if (tokens[i] == "-")
+                    {
+                        result = calcular.Resta(num1, num2);
+                    }
+
+                    tokens[i - 1] = result.ToString();
+                    tokens.RemoveAt(i);
+                    tokens.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return int.Parse(tokens[0]);
         }
 
         private void AssignButtonEvents()
@@ -139,6 +192,10 @@ namespace CalculadoraWS_DeLaCadena_Ipiales_Quishpe
 
             this.btnCalcular.Click += new EventHandler(btnCalcular_Click);
             this.btnLimpiar.Click += new EventHandler(btnLimpiar_Click);
+        }
+
+        private void txtIngresoSalida_TextChanged(object sender, EventArgs e)
+        {
         }
     }
 }

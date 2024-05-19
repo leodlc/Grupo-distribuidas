@@ -55,6 +55,7 @@
             this.txtIngresoSalida.Name = "txtIngresoSalida";
             this.txtIngresoSalida.Size = new System.Drawing.Size(391, 51);
             this.txtIngresoSalida.TabIndex = 0;
+            this.txtIngresoSalida.TextChanged += new System.EventHandler(this.txtIngresoSalida_TextChanged);
             // 
             // btn1
             // 
@@ -91,7 +92,6 @@
             this.btn6.Text = "6";
             this.btn6.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btn6.UseVisualStyleBackColor = false;
-           // this.btn6.Click += new System.EventHandler(this.button2_Click);
             // 
             // btn3
             // 
