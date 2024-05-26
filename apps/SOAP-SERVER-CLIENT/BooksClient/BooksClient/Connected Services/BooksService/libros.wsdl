@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sch="http://spring.io/guides/gs-producing-web-service" xmlns:tns="http://spring.io/guides/gs-producing-web-service" targetNamespace="http://spring.io/guides/gs-producing-web-service" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://spring.io/guides/gs-producing-web-service" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="getLibroRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getLibroResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="libro" type="tns:libro" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="createLibroRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="libro" type="tns:libro" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="createLibroResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:long" />
+            <xs:element name="status" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="updateLibroRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="libro" type="tns:libro" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="updateLibroResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="status" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="deleteLibroRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="deleteLibroResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="status" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getAllLibrosRequest">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="getAllLibrosResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="libros" type="tns:libro" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="libro">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="id" type="xs:long" />
+          <xs:element name="titulo" type="xs:string" />
+          <xs:element name="autor" type="xs:string" />
+          <xs:element name="editorial" type="xs:string" />
+          <xs:element name="anoPublicacion" type="xs:long" />
+          <xs:element name="isbn" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="deleteLibroRequest">
+    <wsdl:part name="deleteLibroRequest" element="tns:deleteLibroRequest" />
+  </wsdl:message>
+  <wsdl:message name="getAllLibrosRequest">
+    <wsdl:part name="getAllLibrosRequest" element="tns:getAllLibrosRequest" />
+  </wsdl:message>
+  <wsdl:message name="getLibroResponse">
+    <wsdl:part name="getLibroResponse" element="tns:getLibroResponse" />
+  </wsdl:message>
+  <wsdl:message name="getAllLibrosResponse">
+    <wsdl:part name="getAllLibrosResponse" element="tns:getAllLibrosResponse" />
+  </wsdl:message>
+  <wsdl:message name="deleteLibroResponse">
+    <wsdl:part name="deleteLibroResponse" element="tns:deleteLibroResponse" />
+  </wsdl:message>
+  <wsdl:message name="createLibroResponse">
+    <wsdl:part name="createLibroResponse" element="tns:createLibroResponse" />
+  </wsdl:message>
+  <wsdl:message name="updateLibroResponse">
+    <wsdl:part name="updateLibroResponse" element="tns:updateLibroResponse" />
+  </wsdl:message>
+  <wsdl:message name="createLibroRequest">
+    <wsdl:part name="createLibroRequest" element="tns:createLibroRequest" />
+  </wsdl:message>
+  <wsdl:message name="getLibroRequest">
+    <wsdl:part name="getLibroRequest" element="tns:getLibroRequest" />
+  </wsdl:message>
+  <wsdl:message name="updateLibroRequest">
+    <wsdl:part name="updateLibroRequest" element="tns:updateLibroRequest" />
+  </wsdl:message>
+  <wsdl:portType name="LibrosPort">
+    <wsdl:operation name="deleteLibro">
+      <wsdl:input name="deleteLibroRequest" message="tns:deleteLibroRequest" />
+      <wsdl:output name="deleteLibroResponse" message="tns:deleteLibroResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getAllLibros">
+      <wsdl:input name="getAllLibrosRequest" message="tns:getAllLibrosRequest" />
+      <wsdl:output name="getAllLibrosResponse" message="tns:getAllLibrosResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getLibro">
+      <wsdl:input name="getLibroRequest" message="tns:getLibroRequest" />
+      <wsdl:output name="getLibroResponse" message="tns:getLibroResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="createLibro">
+      <wsdl:input name="createLibroRequest" message="tns:createLibroRequest" />
+      <wsdl:output name="createLibroResponse" message="tns:createLibroResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="updateLibro">
+      <wsdl:input name="updateLibroRequest" message="tns:updateLibroRequest" />
+      <wsdl:output name="updateLibroResponse" message="tns:updateLibroResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LibrosPortSoap11" type="tns:LibrosPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="deleteLibro">
+      <soap:operation soapAction="" />
+      <wsdl:input name="deleteLibroRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteLibroResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllLibros">
+      <soap:operation soapAction="" />
+      <wsdl:input name="getAllLibrosRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAllLibrosResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLibro">
+      <soap:operation soapAction="" />
+      <wsdl:input name="getLibroRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getLibroResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createLibro">
+      <soap:operation soapAction="" />
+      <wsdl:input name="createLibroRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createLibroResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateLibro">
+      <soap:operation soapAction="" />
+      <wsdl:input name="updateLibroRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateLibroResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LibrosPortService">
+    <wsdl:port name="LibrosPortSoap11" binding="tns:LibrosPortSoap11">
+      <soap:address location="http://192.168.1.9:8080/ws" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
