@@ -124,7 +124,7 @@
     <None Include="Connected Services\BooksService\BooksClient.BooksService.updateLibroResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\BooksService\libros.wsdl" />
+    <None Include="Connected Services\BooksService\libros1.wsdl" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

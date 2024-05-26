@@ -17,3 +17,6 @@ obj/
 *.log
 *.tlog
 *.lastbuildstate
+
+# Ignorar todos los archivos y subdirectorios en BOOKS_WEB_SERVICE
+apps/SOAP-SERVER-CLIENT/BOOKS_WEB_SERVICE/*

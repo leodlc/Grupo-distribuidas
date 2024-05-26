@@ -71,5 +71,10 @@ namespace BooksClient
             // Cerrar el formulario después de guardar el libro
             this.Close();
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
