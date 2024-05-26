@@ -43,7 +43,7 @@ public class BooksController {
     public UpdateLibroResponse updateLibro(@RequestPayload UpdateLibroRequest request) {
         UpdateLibroResponse response = new UpdateLibroResponse();
         ModelBooks modelBooks = convertToModelBooks(request.getLibro());
-        libroService.update(modelBooks); // Asegúrate de que el método update esté implementado en el servicio
+        libroService.save(modelBooks); // Asegúrate de que el método update esté implementado en el servicio
         response.setStatus("Libro actualizado exitosamente");
         return response;
     }

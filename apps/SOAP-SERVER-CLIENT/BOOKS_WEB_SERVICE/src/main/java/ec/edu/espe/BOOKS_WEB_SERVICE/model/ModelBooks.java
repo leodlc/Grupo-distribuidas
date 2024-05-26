@@ -1,9 +1,6 @@
 package ec.edu.espe.BOOKS_WEB_SERVICE.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -12,6 +9,8 @@ import lombok.Data;
 public class ModelBooks {
 
     @Id
+    @GeneratedValue(generator = "libros_Sequence",strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(schema = "appsdistribuidas",allocationSize = 1,name="libros_Sequence",sequenceName = "libross")
     @Column(name = "ID")
     private Long id;
 
