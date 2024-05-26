@@ -41,6 +41,9 @@ namespace BooksClient
             dataGridView1.Columns.Add(editColumn);
             dataGridView1.Columns.Add(deleteColumn);
 
+            // Ocultar la columna idSpecified
+           
+
             // Manejar el evento CellContentClick para los botones de editar y eliminar
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
         }

@@ -19,8 +19,35 @@ namespace BooksClient
         {
             InitializeComponent();
             this.book = book;
+            textBoxTitulo.KeyPress += new KeyPressEventHandler(ValidarEntrada);
+            textBoxAutor.KeyPress += new KeyPressEventHandler(ValidarEntrada);
+            textBoxAnoPublicacion.KeyPress += new KeyPressEventHandler(ValidarEntradaNumeros);
+            textBoxEditorial.KeyPress += new KeyPressEventHandler(ValidarEntrada);
+            textBoxISBN.KeyPress += new KeyPressEventHandler(ValidarEntrada);
         }
-      
+        private void ValidarEntrada(object sender, KeyPressEventArgs e)
+        {
+            // Permitir solo letras, números, espacios, puntos y comas
+            char ch = e.KeyChar;
+
+            if (!char.IsLetterOrDigit(ch) && !char.IsWhiteSpace(ch) && ch != '.' && ch != ',' && ch != '\b' && ch != '-') // \b es la tecla de retroceso
+            {
+                e.Handled = true;
+                MessageBox.Show("Caracter no permitido. Solo se permiten letras, números, espacios, puntos y comas.");
+            }
+        }
+        private void ValidarEntradaNumeros(object sender, KeyPressEventArgs e)
+        {
+            // Permitir solo números y el carácter de retroceso
+            char ch = e.KeyChar;
+
+            if (!char.IsDigit(ch) && ch != '\b') // \b es la tecla de retroceso
+            {
+                e.Handled = true;
+                MessageBox.Show("Solo se permiten números.");
+            }
+        }
+
 
         private void FormEditarLibro_Load(object sender, EventArgs e)
         {
