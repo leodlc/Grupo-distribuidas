@@ -42,13 +42,48 @@ namespace BooksClient
             dataGridView1.Columns.Add(deleteColumn);
 
             // Ocultar la columna idSpecified
-           
+
 
             // Manejar el evento CellContentClick para los botones de editar y eliminar
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
         }
+        /*
+        private void DataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["Editar"].Index && e.RowIndex >= 0)
+            {
+                e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+                var icon = Properties.Resources.edit.ToBitmap(); // Convertir el icono a Bitmap
+                int iconWidth = icon.Width/5;
+                int iconHeight = icon.Height/5;
+
+                // Calcular la posición del icono en la celda
+                int iconX = e.CellBounds.Left + (e.CellBounds.Width - iconWidth) / 4;
+                int iconY = e.CellBounds.Top + (e.CellBounds.Height - iconHeight) / 4;
+
+                // Dibujar el icono en la celda
+                e.Graphics.DrawImage(icon, new Rectangle(iconX, iconY, iconWidth, iconHeight));
+                e.Handled = true;
+            }
+            else if (e.ColumnIndex == dataGridView1.Columns["Eliminar"].Index && e.RowIndex >= 0)
+            {
+                e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+                var icon = Properties.Resources.delete.ToBitmap(); // Convertir el icono a Bitmap
+                int iconWidth = icon.Width/5;
+                int iconHeight = icon.Height/5;
+
+                // Calcular la posición del icono en la celda
+                int iconX = e.CellBounds.Left + (e.CellBounds.Width - iconWidth) / 4;
+                int iconY = e.CellBounds.Top + (e.CellBounds.Height - iconHeight) / 4;
+
+                // Dibujar el icono en la celda
+                e.Graphics.DrawImage(icon, new Rectangle(iconX, iconY, iconWidth, iconHeight));
+                e.Handled = true;
+            }
+        }
 
 
+        */
 
         private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -99,32 +134,6 @@ namespace BooksClient
             }
         }
 
-       /* private void UpdateBook(libro book)
-        {
-            try
-            {
-                var client = new LibrosPortClient();
-
-                // Crear una solicitud de actualización con los datos del libro
-                var request = new updateLibroRequest()
-                {
-                    libro = book
-                };
-
-                // Enviar la solicitud al servicio web para actualizar el libro
-                var response = client.updateLibro(request);
-
-                // Mostrar un mensaje de éxito
-                MessageBox.Show("Libro actualizado exitosamente.");
-
-                // Recargar la lista de libros después de la actualización
-                LoadBooks();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al actualizar el libro: {ex.Message}");
-            }
-        }*/
 
         private async void LoadBooks()
         {
@@ -141,6 +150,21 @@ namespace BooksClient
 
                 // Establecer el BindingSource como origen de datos del DataGridView
                 dataGridView1.DataSource = bindingSource;
+                dataGridView1.Columns["idSpecified"].Visible = false;
+                dataGridView1.Columns["titulo"].HeaderText = "Título";
+                dataGridView1.Columns["id"].HeaderText = "Identificador";
+
+                dataGridView1.Columns["autor"].HeaderText = "Autor";
+                dataGridView1.Columns["editorial"].HeaderText = "Editorial";
+                dataGridView1.Columns["anoPublicacion"].HeaderText = "Año de Publicación";
+                dataGridView1.Columns["isbn"].HeaderText = "ISBN";
+
+                // Establecer el estilo de la columna para que ocupe todo el espacio disponible
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                // Manejar el evento CellContentClick para los botones de editar y eliminar
+
+
 
                 // Refrescar el DataGridView
                 dataGridView1.Refresh();
@@ -151,7 +175,7 @@ namespace BooksClient
             }
         }
 
-        
+
 
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -163,8 +187,8 @@ namespace BooksClient
 
         }
 
-        
-        
+
+
 
         private void dataGridView1_CellContentClick_2(object sender, DataGridViewCellEventArgs e)
         {
@@ -179,4 +203,3 @@ namespace BooksClient
         }
     }
 }
-    

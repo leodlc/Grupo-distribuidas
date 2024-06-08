@@ -16,7 +16,16 @@ namespace BooksClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
+            // Mostrar el formulario de carga
+            using (var formCarga = new FormCarga())
+            {
+                formCarga.ShowDialog();
+            }
+
+            // Una vez que el formulario de carga se cierra, iniciar el formulario principal
             Application.Run(new Form1());
         }
     }
-}
+    }
+

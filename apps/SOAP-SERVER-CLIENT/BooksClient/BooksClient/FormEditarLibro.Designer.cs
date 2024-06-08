@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEditarLibro));
             this.textBoxTitulo = new System.Windows.Forms.TextBox();
             this.textBoxAutor = new System.Windows.Forms.TextBox();
             this.textBoxEditorial = new System.Windows.Forms.TextBox();
@@ -100,13 +101,16 @@
             // 
             // buttonGuardar
             // 
+            this.buttonGuardar.BackColor = System.Drawing.Color.Black;
+            this.buttonGuardar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonGuardar.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonGuardar.Location = new System.Drawing.Point(187, 289);
+            this.buttonGuardar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.buttonGuardar.Location = new System.Drawing.Point(237, 281);
             this.buttonGuardar.Name = "buttonGuardar";
-            this.buttonGuardar.Size = new System.Drawing.Size(99, 28);
+            this.buttonGuardar.Size = new System.Drawing.Size(108, 37);
             this.buttonGuardar.TabIndex = 5;
             this.buttonGuardar.Text = "GUARDAR";
-            this.buttonGuardar.UseVisualStyleBackColor = true;
+            this.buttonGuardar.UseVisualStyleBackColor = false;
             this.buttonGuardar.Click += new System.EventHandler(this.buttonGuardar_Click_1);
             // 
             // label1
@@ -120,6 +124,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(255)))), ((int)(((byte)(149)))));
             this.label5.Location = new System.Drawing.Point(31, 239);
@@ -131,6 +136,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(255)))), ((int)(((byte)(149)))));
             this.label4.Location = new System.Drawing.Point(31, 187);
@@ -142,6 +148,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(255)))), ((int)(((byte)(149)))));
             this.label3.Location = new System.Drawing.Point(31, 143);
@@ -153,6 +160,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(255)))), ((int)(((byte)(149)))));
             this.label2.Location = new System.Drawing.Point(31, 97);
@@ -164,6 +172,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(255)))), ((int)(((byte)(149)))));
             this.label6.Location = new System.Drawing.Point(31, 48);
@@ -177,6 +186,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(65)))), ((int)(((byte)(115)))));
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(593, 343);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -190,8 +200,10 @@
             this.Controls.Add(this.textBoxEditorial);
             this.Controls.Add(this.textBoxAutor);
             this.Controls.Add(this.textBoxTitulo);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormEditarLibro";
-            this.Text = "FormEditarLibro";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Editar Libro";
             this.Load += new System.EventHandler(this.FormEditarLibro_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
