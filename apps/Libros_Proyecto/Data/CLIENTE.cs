@@ -28,7 +28,6 @@ namespace Data
         public string DIRECCLIENTE { get; set; }
         public Nullable<System.DateTime> FECHANACCLIENTE { get; set; }
         public Nullable<bool> ESTADOCLIENTE { get; set; }
-        public string UserKind { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PRESTAMO> PRESTAMO { get; set; }

@@ -27,7 +27,6 @@
           <Property Name="DIRECCLIENTE" Type="varchar" MaxLength="100" />
           <Property Name="FECHANACCLIENTE" Type="datetime" />
           <Property Name="ESTADOCLIENTE" Type="bit" />
-          <Property Name="UserKind" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="GENEROLITERARIO">
           <Key>
@@ -50,6 +49,7 @@
           <Property Name="ISBNLIBRO" Type="varchar" MaxLength="100" />
           <Property Name="ESTADOLIBRO" Type="bit" />
           <Property Name="EDITORIALLIBRO" Type="varchar" MaxLength="100" />
+          <Property Name="STOCKLIBRO" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PRESTAMO">
           <Key>
@@ -162,7 +162,6 @@
           <Property Name="DIRECCLIENTE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FECHANACCLIENTE" Type="DateTime" Precision="3" />
           <Property Name="ESTADOCLIENTE" Type="Boolean" />
-          <Property Name="UserKind" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="PRESTAMO" Relationship="Self.FK_PRESTAMO_SOLICITA_CLIENTE" FromRole="CLIENTE" ToRole="PRESTAMO" />
         </EntityType>
         <EntityType Name="GENEROLITERARIO">
@@ -187,6 +186,7 @@
           <Property Name="ISBNLIBRO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ESTADOLIBRO" Type="Boolean" />
           <Property Name="EDITORIALLIBRO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="STOCKLIBRO" Type="Int32" Nullable="false" />
           <NavigationProperty Name="AUTOR" Relationship="Self.FK_LIBRO_PERTENECE_AUTOR" FromRole="LIBRO" ToRole="AUTOR" />
           <NavigationProperty Name="GENEROLITERARIO" Relationship="Self.FK_LIBRO_CORRESPON_GENEROLI" FromRole="LIBRO" ToRole="GENEROLITERARIO" />
           <NavigationProperty Name="PRESTAMO" Relationship="Self.FK_PRESTAMO_PEDIDO_LIBRO" FromRole="LIBRO" ToRole="PRESTAMO" />
@@ -304,7 +304,6 @@
                 <ScalarProperty Name="DIRECCLIENTE" ColumnName="DIRECCLIENTE" />
                 <ScalarProperty Name="FECHANACCLIENTE" ColumnName="FECHANACCLIENTE" />
                 <ScalarProperty Name="ESTADOCLIENTE" ColumnName="ESTADOCLIENTE" />
-                <ScalarProperty Name="UserKind" ColumnName="UserKind" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -329,6 +328,7 @@
                 <ScalarProperty Name="ISBNLIBRO" ColumnName="ISBNLIBRO" />
                 <ScalarProperty Name="ESTADOLIBRO" ColumnName="ESTADOLIBRO" />
                 <ScalarProperty Name="EDITORIALLIBRO" ColumnName="EDITORIALLIBRO" />
+                <ScalarProperty Name="STOCKLIBRO" ColumnName="STOCKLIBRO" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

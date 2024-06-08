@@ -29,6 +29,7 @@ namespace Data
         public string ISBNLIBRO { get; set; }
         public Nullable<bool> ESTADOLIBRO { get; set; }
         public string EDITORIALLIBRO { get; set; }
+        public int STOCKLIBRO { get; set; }
     
         public virtual AUTOR AUTOR { get; set; }
         public virtual GENEROLITERARIO GENEROLITERARIO { get; set; }
