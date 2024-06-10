@@ -38,15 +38,24 @@ namespace Negocio
             return result;
         }
 
-        public bool Update(GENEROLITERARIO genero)
+        public bool Update(GENEROLITERARIO genero,int id)
         {
             bool result = false;
             using (var r = RepositoryFactory.CreateRepository())
             {
-                GENEROLITERARIO generoTemp = r.Retrieve<GENEROLITERARIO>(g => g.IDGL == genero.IDGL);
+                GENEROLITERARIO generoTemp = r.Retrieve<GENEROLITERARIO>(g => g.IDGL == id);
                 if (generoTemp != null)
                 {
-                    result = r.Update(genero);
+                    if (!string.IsNullOrEmpty(genero.NOMBREGL))
+                    {
+                        generoTemp.NOMBREGL = genero.NOMBREGL;
+                    }
+
+                    if (!string.IsNullOrEmpty(genero.DESCRIPGL))
+                    {
+                        generoTemp.DESCRIPGL = genero.DESCRIPGL;
+                    }
+                    result = r.Update(generoTemp);
                 }
                 else
                 {

@@ -21,7 +21,6 @@ namespace Negocio
                 }
                 else
                 {
-                    // Caso negativo, el libro ya existe
                 }
             }
             return result;
@@ -37,15 +36,62 @@ namespace Negocio
             return result;
         }
 
-        public bool Update(LIBRO libro)
+        public bool Update(LIBRO libro,int id)
         {
             bool result = false;
             using (var r = RepositoryFactory.CreateRepository())
             {
-                LIBRO libroTemp = r.Retrieve<LIBRO>(l => l.IDLIBRO == libro.IDLIBRO);
+                LIBRO libroTemp = r.Retrieve<LIBRO>(l => l.IDLIBRO == id);
                 if (libroTemp != null)
                 {
-                    result = r.Update(libro);
+                    if (!string.IsNullOrEmpty(libro.NOMBRELIBRO))
+                    {
+                        libroTemp.NOMBRELIBRO = libro.NOMBRELIBRO;
+                    }
+
+                    if (libro.ANIOPUBLIBRO.HasValue)
+                    {
+                        libroTemp.ANIOPUBLIBRO = libro.ANIOPUBLIBRO.Value;
+                    }
+                    if (!string.IsNullOrEmpty(libro.IMGLIBRO))
+                    {
+                        libroTemp.IMGLIBRO = libro.IMGLIBRO;
+                    }
+                    if (!string.IsNullOrEmpty(libro.ISBNLIBRO))
+                    {
+                        libroTemp.ISBNLIBRO = libro.ISBNLIBRO;
+                    }
+                    if (!string.IsNullOrEmpty(libro.EDITORIALLIBRO))
+                    {
+                        libroTemp.EDITORIALLIBRO = libro.EDITORIALLIBRO;
+                    }
+                    if (libro.IDAUTOR != -1)
+                    {
+                        libroTemp.IDAUTOR = libro.IDAUTOR;
+                    }
+
+                    if (libro.IDGL !=-1)
+                    {
+                        libroTemp.IDGL = libro.IDGL;
+                    }
+                    if (libro.STOCKLIBRO != -1)
+                    {
+                        libroTemp.STOCKLIBRO = libro.STOCKLIBRO;
+                    }
+
+                    if (libro.ESTADOLIBRO == true)
+                    {
+                        // El valor es verdadero (true)
+                        libroTemp.ESTADOLIBRO = true;
+                    }
+
+                    else
+                    {
+                        // El valor es falso (false)
+                        libroTemp.ESTADOLIBRO = false;
+                    }
+
+                    result = r.Update(libroTemp);
                 }
                 else
                 {

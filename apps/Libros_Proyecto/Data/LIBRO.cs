@@ -21,15 +21,15 @@ namespace Data
         }
     
         public int IDLIBRO { get; set; }
-        public int IDAUTOR { get; set; }
-        public int IDGL { get; set; }
+        public int IDAUTOR { get; set; } = -1;
+        public int IDGL { get; set; } = -1;
         public string NOMBRELIBRO { get; set; }
         public Nullable<System.DateTime> ANIOPUBLIBRO { get; set; }
         public string IMGLIBRO { get; set; }
         public string ISBNLIBRO { get; set; }
         public Nullable<bool> ESTADOLIBRO { get; set; }
         public string EDITORIALLIBRO { get; set; }
-        public int STOCKLIBRO { get; set; }
+        public int STOCKLIBRO { get; set; } = -1;
     
         public virtual AUTOR AUTOR { get; set; }
         public virtual GENEROLITERARIO GENEROLITERARIO { get; set; }
