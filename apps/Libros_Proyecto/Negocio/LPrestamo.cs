@@ -29,22 +29,22 @@ namespace Negocio
 
 
         // Al parecer no existe un id para el prestamo asi que esta pendiente esta funcion
-        /*public PRESTAMO RetrieveById(int id)
+        public PRESTAMO RetrieveById(int idCliente, int idLibro)
         {
             PRESTAMO result = null;
             using (var r = RepositoryFactory.CreateRepository())
             {
-                result = r.Retrieve<PRESTAMO>(p => p.idPrestamo == id);
+                result = r.Retrieve<PRESTAMO>(p => p.IDCLIENTE == idCliente && p.IDLIBRO == idLibro);
             }
             return result;
         }
 
-        public bool Update(PRESTAMO prestamo)
+        public bool Update(PRESTAMO prestamo, int idCliente, int idLibro)
         {
             bool result = false;
             using (var r = RepositoryFactory.CreateRepository())
             {
-                PRESTAMO prestamoTemp = r.Retrieve<PRESTAMO>(p => p.idPrestamo == prestamo.idPrestamo);
+                PRESTAMO prestamoTemp = r.Retrieve<PRESTAMO>(p => p.IDCLIENTE == idCliente && p.IDLIBRO == idLibro);
                 if (prestamoTemp != null)
                 {
                     result = r.Update(prestamo);
@@ -57,11 +57,10 @@ namespace Negocio
             return result;
         }
 
-        Aqui no se puede hacer el eliminar debido a que no se puede obtener el prestamo por id
-        public bool Delete(int id)
+        public bool Delete(int idCliente, int idLibro)
         {
             bool result = false;
-            var prestamoTemp = RetrieveById(id);
+            var prestamoTemp = RetrieveById(idCliente, idLibro);
             if (prestamoTemp != null)
             {
                 using (var r = RepositoryFactory.CreateRepository())
@@ -74,7 +73,7 @@ namespace Negocio
                 // Caso negativo, el préstamo no existe
             }
             return result;
-        }*/
+        }
 
         public List<PRESTAMO> RetrieveAll()
         {
