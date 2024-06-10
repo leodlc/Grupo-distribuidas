@@ -47,7 +47,37 @@ namespace Negocio
                 PRESTAMO prestamoTemp = r.Retrieve<PRESTAMO>(p => p.IDCLIENTE == idCliente && p.IDLIBRO == idLibro);
                 if (prestamoTemp != null)
                 {
-                    result = r.Update(prestamo);
+                    if (prestamo.IDCLIENTE != -1)
+                    {
+                        prestamoTemp.IDCLIENTE = prestamo.IDCLIENTE;
+                    }
+                    if(prestamo.IDLIBRO != -1)
+                    {
+                        prestamoTemp.IDLIBRO = prestamo.IDLIBRO;
+                    }
+
+                    if (prestamo.FECHAINIPREST.HasValue)
+                    {
+                        prestamoTemp.FECHAINIPREST = prestamo.FECHAINIPREST.Value;
+                    }
+                    if (prestamo.FECHAFINPREST.HasValue)
+                    {
+                        prestamoTemp.FECHAFINPREST = prestamo.FECHAFINPREST.Value;
+                    }
+                    if (!string.IsNullOrEmpty(prestamo.DESCRPREST))
+                    {
+                        prestamoTemp.DESCRPREST = prestamo.DESCRPREST;
+                    }
+                    if (prestamo.ESTADOPREST == true)
+                    {
+                        prestamoTemp.ESTADOPREST = true;
+
+                    }
+                    else
+                    {
+                        prestamoTemp.ESTADOPREST = false;
+                    }
+                    result = r.Update(prestamoTemp);
                 }
                 else
                 {
@@ -81,6 +111,26 @@ namespace Negocio
             using (var r = RepositoryFactory.CreateRepository())
             {
                 result = r.Filter<PRESTAMO>(p => true); // Obtener todos los préstamos
+            }
+            return result;
+        }
+
+        public List<PRESTAMO> RetrieveByClient(int id)
+        {
+            List<PRESTAMO> result = null;
+            using (var r = RepositoryFactory.CreateRepository())
+            {
+                result = r.Filter<PRESTAMO>(p => p.IDCLIENTE==id); // Obtener prestamos por id del Cliente
+            }
+            return result;
+        }
+
+        public List<PRESTAMO> RetrieveByBook(int id)
+        {
+            List<PRESTAMO> result = null;
+            using (var r = RepositoryFactory.CreateRepository())
+            {
+                result = r.Filter<PRESTAMO>(p => p.IDLIBRO == id); // Obtener prestamos por id del Cliente
             }
             return result;
         }

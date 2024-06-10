@@ -23,14 +23,14 @@ namespace Service.Controllers
         }
         [HttpGet]
 
-        public IHttpActionResult GetBookById(int id)
+        public IHttpActionResult GetById(int id)
         {
             var negocio = new Negocio.LLibro();
             var libro = negocio.RetrieveById(id);
             return Json(libro, jsonSettings);
         }
         [HttpPost]
-        public LIBRO AddBook(LIBRO _libro)
+        public LIBRO Add(LIBRO _libro)
         {
             var negocio = new Negocio.LLibro();
             var libro = negocio.Create(_libro);
@@ -39,7 +39,7 @@ namespace Service.Controllers
 
 
         [HttpGet]
-        public IHttpActionResult GetAllBooks()
+        public IHttpActionResult GetAll()
         {
             var negocio = new Negocio.LLibro();
             var libros = negocio.RetrieveAll();
@@ -48,7 +48,7 @@ namespace Service.Controllers
 
 
         [HttpPut]
-        public bool UpdateBook(int id, LIBRO _libro)
+        public bool Update(int id, LIBRO _libro)
         {
             var negocio = new Negocio.LLibro();
             var result = negocio.Update(_libro, id);
@@ -56,7 +56,7 @@ namespace Service.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteBook(int id)
+        public IHttpActionResult Delete(int id)
         {
             var negocio = new Negocio.LLibro();
             var result = negocio.Delete(id);

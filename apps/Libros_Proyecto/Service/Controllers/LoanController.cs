@@ -21,45 +21,62 @@ namespace Service.Controllers
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
         }
-        /*  [HttpGet]
+      
+[HttpGet]
 
-    public IHttpActionResult GetLoanById(int id)
+    public IHttpActionResult GetById(int id, int idLibro)
        {
            var negocio = new Negocio.LPrestamo();
-           var prestamo = negocio.RetrieveById(id);
+           var prestamo = negocio.RetrieveById(id,idLibro);
            return Json(prestamo, jsonSettings);
-       }*/
+       }
         [HttpPost]
-        public PRESTAMO AddLoan(PRESTAMO _prestamo)
+        public PRESTAMO Add(PRESTAMO _prestamo)
         {
             var negocio = new Negocio.LPrestamo();
             var prestamo = negocio.Create(_prestamo);
             return prestamo;
         }
 
-
         [HttpGet]
-        public IHttpActionResult GetAllLoans()
+        public IHttpActionResult GetAll()
         {
             var negocio = new Negocio.LPrestamo();
             var prestamo = negocio.RetrieveAll();
             return Json(prestamo, jsonSettings);
         }
-        /*
+
+        [HttpGet]
+        public IHttpActionResult GetByClient(int id)
+        {
+            var negocio = new Negocio.LPrestamo();
+            var prestamo = negocio.RetrieveByClient(id);
+            return Json(prestamo, jsonSettings);
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult GetByBook(int id)
+        {
+            var negocio = new Negocio.LPrestamo();
+            var prestamo = negocio.RetrieveByBook(id);
+            return Json(prestamo, jsonSettings);
+        }
+
 
         [HttpPut]
-        public bool UpdateBook(int id, LIBRO _libro)
+        public bool Update(int id,int idLibro, PRESTAMO _prestamo)
         {
-            var negocio = new Negocio.LLibro();
-            var result = negocio.Update(_libro, id);
+            var negocio = new Negocio.LPrestamo();
+            var result = negocio.Update(_prestamo, id,idLibro);
             return result;
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteBook(int id)
+        public IHttpActionResult Delete(int id,int idLibro)
         {
-            var negocio = new Negocio.LLibro();
-            var result = negocio.Delete(id);
+            var negocio = new Negocio.LPrestamo();
+            var result = negocio.Delete(id,idLibro);
             if (result)
             {
                 return Ok("Libro eliminado correctamente.");
@@ -68,6 +85,6 @@ namespace Service.Controllers
             {
                 return BadRequest("No se pudo eliminar el libro.");
             }
-        }*/
+        }
     }
 }

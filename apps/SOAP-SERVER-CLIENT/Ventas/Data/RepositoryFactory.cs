@@ -11,7 +11,9 @@ namespace Data
     {
         public static IRepository CreateRepository()
         {
-            return new EFRepository(new VentasEntities());
+            var Context = new VentasEntities();
+            Context.Configuration.ProxyCreationEnabled = false; 
+            return new EFRepository(Context);
         }
     }
 }

@@ -23,14 +23,14 @@ namespace Service.Controllers
         }
         [HttpGet]
 
-        public IHttpActionResult GetAuthorById(int id)
+        public IHttpActionResult GetById(int id)
         {
             var negocio = new Negocio.LAutor();
             var autor = negocio.RetrieveById(id);
             return Json(autor, jsonSettings);
         }
         [HttpPost]
-        public AUTOR AddAuthor(AUTOR _author)
+        public AUTOR Add(AUTOR _author)
         {
             var negocio = new Negocio.LAutor();
             var autor = negocio.Create(_author);
@@ -39,7 +39,7 @@ namespace Service.Controllers
 
 
         [HttpGet]
-        public IHttpActionResult GetAllAuthors()
+        public IHttpActionResult GetAll()
         {
             var negocio = new Negocio.LAutor();
             var autor = negocio.RetrieveAll();
@@ -48,7 +48,7 @@ namespace Service.Controllers
 
 
         [HttpPut]
-        public bool UpdateAuthor(int id, AUTOR _autor)
+        public bool Update(int id, AUTOR _autor)
         {
             var negocio = new Negocio.LAutor();
             var result = negocio.Update(_autor, id);
@@ -56,7 +56,7 @@ namespace Service.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteAuthor(int id)
+        public IHttpActionResult Delete(int id)
         {
             var negocio = new Negocio.LAutor();
             var result = negocio.Delete(id);

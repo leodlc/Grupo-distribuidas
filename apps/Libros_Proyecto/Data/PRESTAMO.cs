@@ -14,8 +14,8 @@ namespace Data
     
     public partial class PRESTAMO
     {
-        public int IDCLIENTE { get; set; }
-        public int IDLIBRO { get; set; }
+        public int IDCLIENTE { get; set; } = -1;
+        public int IDLIBRO { get; set; } = -1;
         public Nullable<System.DateTime> FECHAINIPREST { get; set; }
         public Nullable<System.DateTime> FECHAFINPREST { get; set; }
         public string DESCRPREST { get; set; }

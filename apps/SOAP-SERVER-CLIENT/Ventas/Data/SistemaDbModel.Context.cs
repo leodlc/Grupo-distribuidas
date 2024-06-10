@@ -18,7 +18,7 @@ namespace Data
         public VentasEntities()
             : base("name=VentasEntities")
         {
-            this.Configuration.LazyLoadingEnabled = false;
+           // this.Configuration.LazyLoadingEnabled = false;
 
         }
 

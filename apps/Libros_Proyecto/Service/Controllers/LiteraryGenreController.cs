@@ -23,7 +23,7 @@ namespace Service.Controllers
         }
         [HttpGet]
 
-        public IHttpActionResult GetGenreById(int id)
+        public IHttpActionResult GetById(int id)
         {
             var negocio = new Negocio.LGeneroLiterario();
             var genero = negocio.RetrieveById(id);
@@ -39,7 +39,7 @@ namespace Service.Controllers
 
 
         [HttpGet]
-        public IHttpActionResult GetAllGenres()
+        public IHttpActionResult GetAll()
         {
             var negocio = new Negocio.LGeneroLiterario();
             var genero = negocio.RetrieveAll();
@@ -48,7 +48,7 @@ namespace Service.Controllers
 
 
         [HttpPut]
-        public bool UpdateGenre(int id, GENEROLITERARIO _genero)
+        public bool Update(int id, GENEROLITERARIO _genero)
         {
             var negocio = new Negocio.LGeneroLiterario();
             var result = negocio.Update(_genero, id);
@@ -56,7 +56,7 @@ namespace Service.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteGenre(int id)
+        public IHttpActionResult Delete(int id)
         {
             var negocio = new Negocio.LGeneroLiterario();
             var result = negocio.Delete(id);

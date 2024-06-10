@@ -23,14 +23,14 @@ namespace Service.Controllers
         }
         [HttpGet]
 
-        public IHttpActionResult GetClientById(int id)
+        public IHttpActionResult GetById(int id)
         {
             var negocio = new Negocio.LCliente();
             var cliente = negocio.RetrieveById(id);
             return Json(cliente, jsonSettings);
         }
         [HttpPost]
-        public CLIENTE AddClient(CLIENTE _cliente)
+        public CLIENTE Add(CLIENTE _cliente)
         {
             var negocio = new Negocio.LCliente();
             var cliente = negocio.Create(_cliente);
@@ -39,7 +39,7 @@ namespace Service.Controllers
         
 
         [HttpGet]
-        public IHttpActionResult GetAllClients()
+        public IHttpActionResult GetAll()
         {
             var negocio = new Negocio.LCliente();
             var clientes = negocio.RetrieveAll();
@@ -48,7 +48,7 @@ namespace Service.Controllers
 
 
         [HttpPut]
-        public bool UpdateClient(int id, CLIENTE _cliente)
+        public bool Update(int id, CLIENTE _cliente)
         {
             var negocio = new Negocio.LCliente();
             var result = negocio.Update(_cliente, id);
@@ -56,7 +56,7 @@ namespace Service.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteClient(int id)
+        public IHttpActionResult Delete(int id)
         {
             var negocio = new Negocio.LCliente();
             var result = negocio.Delete(id);
