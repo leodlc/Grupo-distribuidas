@@ -18,8 +18,10 @@ namespace Data
         public booksDataBaseEntities()
             : base("name=booksDataBaseEntities")
         {
+            this.Configuration.LazyLoadingEnabled = false;
+
         }
-    
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
