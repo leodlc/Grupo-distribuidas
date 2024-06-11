@@ -1,18 +1,37 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿/* Content/site.css */
+.navbar-brand img {
+    width: 50px;
+    height: auto;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.nav-item .nav-link {
+    color: #000;
+    transition: background-color 0.3s, color 0.3s; /* Transición suave */
+    padding: 10px 15px; /* Añade padding para el efecto del cuadro */
+    border-radius: 5px; /* Añade bordes redondeados */
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+    .nav-item .nav-link:hover {
+        background-color: #004400;
+        color: #fff;
+    }
+
+.nav-item.active .nav-link {
+    background-color: #004400;
+    color: #fff;
 }
 
+.navbar {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: white; /* Asegura que el fondo sea blanco */
+}
+
+body {
+    padding-top: 70px; /* Altura de la navbar para que no cubra el contenido */
+}
+
+.descripcion p{
+    font-size:5px
+}
