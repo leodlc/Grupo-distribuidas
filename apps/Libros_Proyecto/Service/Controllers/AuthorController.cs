@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Data;
 using Newtonsoft.Json;
 
@@ -21,8 +22,13 @@ namespace Service.Controllers
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
         }
+        /// <summary>
+        /// Devuelve la busca del Autor por su Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
-
+        [ResponseType(typeof(IEnumerable<AUTOR>))]
         public IHttpActionResult GetById(int id)
         {
             var negocio = new Negocio.LAutor();
