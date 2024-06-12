@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Presentacion_Web.App_Start;
 
 namespace Presentacion_Web
 {
@@ -13,6 +14,8 @@ namespace Presentacion_Web
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            // Registrar el servicio ApiService
+            DependencyResolver.SetResolver(new MyDependencyResolver());
         }
     }
 }

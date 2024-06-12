@@ -1,14 +1,21 @@
 ﻿/* Content/site.css */
 .navbar-brand img {
-    width: 50px;
+    width: 100px; /* Ajusta este valor según el tamaño deseado */
     height: auto;
+   margin-right:50px;
+   margin-left:20px;
 }
+
+.nav-item{
+    padding-right:35px;
+    padding-left:35px;
+}
+/* Estilos adicionales */
 
 .nav-item .nav-link {
     color: #000;
     transition: background-color 0.3s, color 0.3s; /* Transición suave */
     padding: 10px 15px; /* Añade padding para el efecto del cuadro */
-    border-radius: 5px; /* Añade bordes redondeados */
 }
 
     .nav-item .nav-link:hover {
@@ -24,14 +31,22 @@
 .navbar {
     width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     background-color: white; /* Asegura que el fondo sea blanco */
 }
 
 body {
     padding-top: 70px; /* Altura de la navbar para que no cubra el contenido */
 }
-
-.descripcion p{
-    font-size:5px
+.content-wrapper {
+    margin-top: 70px; /* Altura de la barra de navegación */
 }
+
+.modal-header .close {
+    margin: -0.5rem -0.5rem -0.5rem auto;
+    background-color:red;
+    border-radius:5px;
+    color:white;
+}
+
+
