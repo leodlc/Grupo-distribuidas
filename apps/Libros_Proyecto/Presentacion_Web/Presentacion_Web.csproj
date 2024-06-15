@@ -191,6 +191,7 @@
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LiteraryGenreController.cs" />
+    <Compile Include="Controllers\LoanController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -198,6 +199,7 @@
     <Compile Include="Service\AuthorService.cs" />
     <Compile Include="Service\ClientService.cs" />
     <Compile Include="Service\LiteraryGenreService.cs" />
+    <Compile Include="Service\LoanService.cs" />
     <Compile Include="Utils\Validations.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +243,8 @@
     <Content Include="Views\LiteraryGenre\_CrearGeneroForm.cshtml" />
     <Content Include="Views\Client\Index.cshtml" />
     <Content Include="Views\Client\_CrearClienteForm.cshtml" />
+    <Content Include="Views\Loan\Index.cshtml" />
+    <Content Include="Views\Loan\_CrearPrestamoForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -252,7 +256,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Views\GenLiterary\" />
-    <Folder Include="Views\Loan\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj">

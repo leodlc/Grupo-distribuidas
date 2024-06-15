@@ -1,0 +1,105 @@
+﻿@model Data.PRESTAMO
+
+@using (Html.BeginForm(Model.IDCLIENTE == 0 && Model.IDLIBRO == 0 ? "Create" : "Edit", "Loan", FormMethod.Post, new { id = "prestamoForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Prestamo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" id="IDCLIENTE" name="IDCLIENTE" required>
+                    <option value="">Seleccione un cliente...</option>
+                    <!-- Opciones de clientes se cargarán dinámicamente -->
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Libro", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" id="IDLIBRO" name="IDLIBRO" required>
+                    <option value="">Seleccione un libro...</option>
+                    <!-- Opciones de libros se cargarán dinámicamente -->
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="FECHAFINPREST">Fecha de finalización de préstamo</label>
+            <div class="col-md-10">
+                <input type="date" class="form-control" id="FECHAFINPREST" name="FECHAFINPREST" value="@Model.FECHAFINPREST?.ToString(" yyyy-MM-dd")" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="DESCRPREST">Descripción</label>
+            <div class="col-md-10">
+                <textarea class="form-control" id="DESCRPREST" name="DESCRPREST" rows="3" maxlength="200">@Model.DESCRPREST</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Agrega jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Función para cargar los clientes disponibles desde el controlador Loan
+        function cargarClientesDisponibles() {
+            $.ajax({
+                url: '@Url.Action("GetClientesDisponibles", "Loan")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var select = $('#IDCLIENTE');
+                    select.empty();
+                    select.append($('<option>').text('Seleccione un cliente...').attr('value', ''));
+                    $.each(data, function (index, cliente) {
+                        var optionText = `${cliente.NOMBRECLIENTE} ${cliente.APELLIDOCLIENTE} - ${cliente.CEDULACLIENTE}`;
+                        
+                        select.append($('<option>').text(optionText).attr('value', cliente.IDCLIENTE));
+                    });
+                },
+                error: function () {
+                    console.error("Error al cargar los clientes disponibles.");
+                }
+            });
+        }
+
+        // Función para cargar los libros disponibles desde el controlador Loan
+        function cargarLibrosDisponibles() {
+            $.ajax({
+                url: '@Url.Action("GetLibrosDisponibles", "Loan")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var select = $('#IDLIBRO');
+                    select.empty();
+                    select.append($('<option>').text('Seleccione un libro...').attr('value', ''));
+                    $.each(data, function (index, libro) {
+                        var optionText = `${libro.NOMBRELIBRO}`;
+                        select.append($('<option>').text(optionText).attr('value', libro.IDLIBRO));
+                    });
+                },
+                error: function () {
+                    console.error("Error al cargar los libros disponibles.");
+                }
+            });
+        }
+
+        // Llamar a las funciones para cargar los clientes y libros al cargar el documento
+        cargarClientesDisponibles();
+        cargarLibrosDisponibles();
+    });
+</script>
