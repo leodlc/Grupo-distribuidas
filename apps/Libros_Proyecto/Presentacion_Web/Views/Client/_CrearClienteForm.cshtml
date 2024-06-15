@@ -13,35 +13,35 @@
         <div class="form-group">
             <label class="control-label col-md-2" for="CEDULACLIENTE">Cédula</label>
             <div class="col-md-10">
-                <input type="text" class="form-control" id="CEDULACLIENTE" name="CEDULACLIENTE" value="@Model.CEDULACLIENTE" required maxlength="20" />
+                <input type="text" class="form-control" id="CEDULACLIENTE" name="CEDULACLIENTE" value="@Model.CEDULACLIENTE" required maxlength="10" />
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2" for="NOMBRECLIENTE">Nombre</label>
             <div class="col-md-10">
-                <input type="text" class="form-control" id="NOMBRECLIENTE" name="NOMBRECLIENTE" value="@Model.NOMBRECLIENTE" required maxlength="100" />
+                <input type="text" class="form-control" id="NOMBRECLIENTE" name="NOMBRECLIENTE" value="@Model.NOMBRECLIENTE" required maxlength="15" />
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2" for="APELLIDOCLIENTE">Apellido</label>
             <div class="col-md-10">
-                <input type="text" class="form-control" id="APELLIDOCLIENTE" name="APELLIDOCLIENTE" value="@Model.APELLIDOCLIENTE" required maxlength="100" />
+                <input type="text" class="form-control" id="APELLIDOCLIENTE" name="APELLIDOCLIENTE" value="@Model.APELLIDOCLIENTE" required maxlength="15" />
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2" for="TELEFONOCLIENTE">Teléfono</label>
             <div class="col-md-10">
-                <input type="text" class="form-control" id="TELEFONOCLIENTE" name="TELEFONOCLIENTE" value="@Model.TELEFONOCLIENTE" maxlength="20" />
+                <input type="text" class="form-control" id="TELEFONOCLIENTE" name="TELEFONOCLIENTE" value="@Model.TELEFONOCLIENTE" maxlength="10" />
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2" for="DIRECCLIENTE">Dirección</label>
             <div class="col-md-10">
-                <input type="text" class="form-control" id="DIRECCLIENTE" name="DIRECCLIENTE" value="@Model.DIRECCLIENTE" maxlength="200" />
+                <input type="text" class="form-control" id="DIRECCLIENTE" name="DIRECCLIENTE" value="@Model.DIRECCLIENTE" required maxlength="100" />
             </div>
         </div>
 
@@ -52,12 +52,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="ESTADOCLIENTE">Estado</label>
-            <div class="col-md-10">
-                <input type="checkbox" id="ESTADOCLIENTE" name="ESTADOCLIENTE" @(Model.ESTADOCLIENTE == true ? "checked" : "") />
-            </div>
-        </div>
+    
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
