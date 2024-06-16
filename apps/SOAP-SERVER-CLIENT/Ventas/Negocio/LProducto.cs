@@ -116,5 +116,15 @@ namespace Negocio
             }
             return result;
         }
+
+        public int CountByCategoryId(int categoryId)
+        {
+            int count = 0;
+            using (var r = RepositoryFactory.CreateRepository())
+            {
+                count = r.Count<Producto>(p => p.CategoriaId == categoryId);
+            }
+            return count;
+        }
     }
 }

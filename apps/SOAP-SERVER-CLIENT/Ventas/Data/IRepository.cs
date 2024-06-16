@@ -17,5 +17,6 @@ namespace Data
         TEntity Retrieve<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
 
         List<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
+        int Count<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
     }
 }

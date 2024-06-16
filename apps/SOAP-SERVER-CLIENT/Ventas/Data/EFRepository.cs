@@ -101,5 +101,20 @@ return Result;
             return Result;
 
         }
+        public int Count<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class
+        {
+            int count = 0;
+            try
+            {
+                count = dbContext.Set<TEntity>().Count(criteria);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return count;
+        }
     }
+   
+
 }

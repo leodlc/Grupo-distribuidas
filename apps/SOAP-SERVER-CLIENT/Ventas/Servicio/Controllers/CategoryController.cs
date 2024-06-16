@@ -4,12 +4,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using Data;
 
 namespace Servicio.Controllers
 {
     public class CategoryController : ApiController
     {
+        [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
+
         [HttpPost]
         public Categoria Add(Categoria _categoria)
         {
