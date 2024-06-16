@@ -18,7 +18,7 @@ namespace Presentacion_Web.Service
 
         public async Task<List<GENEROLITERARIO>> GetGenresAsync()
         {
-            var response = await _httpClient.GetAsync("http://localhost:54845/api/literarygenre/getall");
+            var response = await _httpClient.GetAsync("http://localhost:54845/api/literarygenre/GetAll");
             response.EnsureSuccessStatusCode();
 
             var responseData = await response.Content.ReadAsStringAsync();
@@ -39,7 +39,7 @@ namespace Presentacion_Web.Service
             var genreJson = JsonConvert.SerializeObject(genre);
             var content = new StringContent(genreJson, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("http://localhost:54845/api/literarygenre/addgenre", content);
+            var response = await _httpClient.PostAsync("http://localhost:54845/api/literarygenre/AddGenre", content);
             return response.IsSuccessStatusCode;
         }
 
@@ -48,13 +48,13 @@ namespace Presentacion_Web.Service
             var genreJson = JsonConvert.SerializeObject(genre);
             var content = new StringContent(genreJson, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PutAsync($"http://localhost:54845/api/literarygenre/update/{id}", content);
+            var response = await _httpClient.PutAsync($"http://localhost:54845/api/literarygenre/Update/{id}", content);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteGenreAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"http://localhost:54845/api/literarygenre/delete/{id}");
+            var response = await _httpClient.DeleteAsync($"http://localhost:54845/api/literarygenre/Delete/{id}");
             return response.IsSuccessStatusCode;
         }
     }
