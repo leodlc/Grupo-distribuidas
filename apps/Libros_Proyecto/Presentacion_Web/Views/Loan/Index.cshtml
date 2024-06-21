@@ -16,17 +16,17 @@
     <!-- Agregar campo para buscar por cédula -->
     <div class="row mb-3">
         @*<div class="col-md-6 offset-md-3">
-            @using (Html.BeginForm("SearchByCedula", "Loan", FormMethod.Post, new { @class = "form-inline", id = "searchForm" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="input-group">
-                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Buscar por cédula" required />
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="submit">Buscar</button>
-                    </span>
-                </div>
-            }
-        </div>*@
+                @using (Html.BeginForm("SearchByCedula", "Loan", FormMethod.Post, new { @class = "form-inline", id = "searchForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Buscar por cédula" required />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Buscar</button>
+                        </span>
+                    </div>
+                }
+            </div>*@
     </div>
 
     <div class="table-responsive">
@@ -45,8 +45,8 @@
                 @foreach (var prestamo in Model)
                 {
                     <tr>
-                        <td>@prestamo.IDCLIENTE</td>
-                        <td>@prestamo.IDLIBRO</td>
+                        <td data-idcliente="@prestamo.IDCLIENTE" class="cliente-name"></td>
+                        <td data-idlibro="@prestamo.IDLIBRO" class="libro-name"></td>
                         <td>@(prestamo.FECHAINIPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
                         <td>@(prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
                         <td>@prestamo.DESCRPREST</td>
@@ -102,6 +102,42 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        // Cargar nombres de clientes
+        $('.cliente-name').each(function () {
+            var clienteId = $(this).data('idcliente');
+            var element = $(this);
+            $.ajax({
+                url: 'http://localhost:54845/api/client/getbyid/' + clienteId,  // Asegúrate de que esta URL es correcta
+                type: 'GET',
+                success: function (data) {
+                    console.log(data); // Verifica la estructura de la respuesta en la consola
+                    element.text(data.NOMBRECLIENTE + ' ' + data.APELLIDOCLIENTE);
+                },
+                error: function () {
+                    element.text('Cliente no encontrado');
+                }
+            });
+        });
+
+        // Cargar nombres de libros
+        $('.libro-name').each(function () {
+            var libroId = $(this).data('idlibro');
+            var element = $(this);
+            $.ajax({
+                url: 'http://localhost:54845/api/book/GetById/' + libroId,  // Asegúrate de que esta URL es correcta
+                type: 'GET',
+                success: function (data) {
+                    console.log(data); // Verifica la estructura de la respuesta en la consola
+                    element.text(data.NOMBRELIBRO);
+                },
+                error: function () {
+                    element.text('Libro no encontrado');
+                }
+            });
+        });
+    });
+
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var ids = button.data('id').split('/');
@@ -112,7 +148,7 @@
         $.ajax({
             url: '@Url.Action("Edit", "Loan")',
             type: 'GET',
-            data: { id: idCliente, idLibro: idLibro },
+            data: { idCliente: idCliente, idLibro: idLibro },
             success: function (data) {
                 modal.find('.modal-body').html(data);
             }

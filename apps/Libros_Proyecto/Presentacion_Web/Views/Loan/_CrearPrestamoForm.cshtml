@@ -1,6 +1,6 @@
 ﻿@model Data.PRESTAMO
 
-@using (Html.BeginForm(Model.IDCLIENTE == 0 && Model.IDLIBRO == 0 ? "Create" : "EditPrestamo", "Loan", FormMethod.Post, new { id = "prestamoForm", enctype = "multipart/form-data" }))
+@using (Html.BeginForm(Model.IDCLIENTE == 0 && Model.IDLIBRO == 0 ? "Create" : "Edit", "Loan", FormMethod.Post, new { id = "prestamoForm", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
@@ -25,6 +25,13 @@
                     <option value="">Seleccione un libro...</option>
                     <!-- Opciones de libros se cargarán dinámicamente -->
                 </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="FECHAINIPREST">Fecha de inicio del préstamo</label>
+            <div class="col-md-10">
+                <input type="date" class="form-control" id="FECHAINIPREST" name="FECHAINIPREST" readonly />
             </div>
         </div>
 
@@ -55,10 +62,10 @@
 
 <script>
     $(document).ready(function () {
-        // Función para cargar los clientes disponibles desde el controlador Loan
+        // Función para cargar los clientes disponibles desde una URL
         function cargarClientesDisponibles() {
             $.ajax({
-                url: '@Url.Action("GetClientesDisponibles", "Loan")',
+                url: 'http://localhost:54845/api/client/getall', // Cambia esta URL según sea necesario
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -66,10 +73,11 @@
                     select.empty();
                     select.append($('<option>').text('Seleccione un cliente...').attr('value', ''));
                     $.each(data, function (index, cliente) {
-                        var optionText = `${cliente.NOMBRECLIENTE} ${cliente.APELLIDOCLIENTE} - ${cliente.CEDULACLIENTE}`;
+                        var optionText = cliente.NOMBRECLIENTE + " " + cliente.APELLIDOCLIENTE;
                         select.append($('<option>').text(optionText).attr('value', cliente.IDCLIENTE));
                     });
-                    // Seleccionar el cliente actual si es una edición
+
+                    // Seleccionar el cliente actual
                     select.val('@Model.IDCLIENTE');
                 },
                 error: function () {
@@ -78,10 +86,10 @@
             });
         }
 
-        // Función para cargar los libros disponibles desde el controlador Loan
+        // Función para cargar los libros disponibles desde una URL
         function cargarLibrosDisponibles() {
             $.ajax({
-                url: '@Url.Action("GetLibrosDisponibles", "Loan")',
+                url: 'http://localhost:54845/api/book/GetAll', // Cambia esta URL según sea necesario
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -91,7 +99,8 @@
                     $.each(data, function (index, libro) {
                         select.append($('<option>').text(libro.NOMBRELIBRO).attr('value', libro.IDLIBRO));
                     });
-                    // Seleccionar el libro actual si es una edición
+
+                    // Seleccionar el libro actual
                     select.val('@Model.IDLIBRO');
                 },
                 error: function () {
@@ -104,6 +113,10 @@
         cargarClientesDisponibles();
         cargarLibrosDisponibles();
 
+        // Establecer la fecha de inicio del préstamo al cargar la página
+        var today = new Date().toISOString().split('T')[0];
+        $('#FECHAINIPREST').val(today);
+
         // Manejar el envío del formulario
         $('#prestamoForm').on('submit', function (e) {
             e.preventDefault(); // Evitar el envío automático del formulario
@@ -112,6 +125,7 @@
             var formData = {
                 IDCLIENTE: $('#IDCLIENTE').val(),
                 IDLIBRO: $('#IDLIBRO').val(),
+                FECHAINIPREST: $('#FECHAINIPREST').val(),
                 FECHAFINPREST: $('#FECHAFINPREST').val(),
                 DESCRPREST: $('#DESCRPREST').val()
             };
@@ -119,11 +133,25 @@
             // Imprimir los datos en la consola antes de enviar
             console.log('Datos del formulario:', formData);
 
-            // Simular un tiempo de espera antes de enviar el formulario
-            setTimeout(function () {
-                // Enviar el formulario manualmente después del tiempo de espera
-                $('#prestamoForm').off('submit').submit();
-            }, 4000); // 8 segundos (8000 milisegundos)
+            // Enviar los datos del formulario manualmente usando AJAX
+            $.ajax({
+                url: 'http://localhost:54845/api/loan/add', // URL directa para agregar préstamo
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    console.log('Formulario enviado correctamente:', response);
+                    // Redirigir o realizar alguna acción después del envío exitoso
+                    window.location.href = '@Url.Action("Index", "Loan")'; // Redirigir a la página de índice de préstamos
+                },
+                error: function (error) {
+                    console.error('Error al enviar el formulario:', error);
+                }
+            });
+
         });
     });
 </script>
