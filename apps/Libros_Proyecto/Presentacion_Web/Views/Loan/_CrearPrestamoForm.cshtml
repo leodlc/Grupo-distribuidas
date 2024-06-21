@@ -1,6 +1,6 @@
 ﻿@model Data.PRESTAMO
 
-@using (Html.BeginForm(Model.IDCLIENTE == 0 && Model.IDLIBRO == 0 ? "Create" : "Edit", "Loan", FormMethod.Post, new { id = "prestamoForm", enctype = "multipart/form-data" }))
+@using (Html.BeginForm(Model.IDCLIENTE == 0 && Model.IDLIBRO == 0 ? "Create" : "EditPrestamo", "Loan", FormMethod.Post, new { id = "prestamoForm", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
@@ -50,7 +50,7 @@
     </div>
 }
 
-<!-- Agrega jQuery -->
+<!-- Agregar jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -67,9 +67,10 @@
                     select.append($('<option>').text('Seleccione un cliente...').attr('value', ''));
                     $.each(data, function (index, cliente) {
                         var optionText = `${cliente.NOMBRECLIENTE} ${cliente.APELLIDOCLIENTE} - ${cliente.CEDULACLIENTE}`;
-                        
                         select.append($('<option>').text(optionText).attr('value', cliente.IDCLIENTE));
                     });
+                    // Seleccionar el cliente actual si es una edición
+                    select.val('@Model.IDCLIENTE');
                 },
                 error: function () {
                     console.error("Error al cargar los clientes disponibles.");
@@ -88,9 +89,10 @@
                     select.empty();
                     select.append($('<option>').text('Seleccione un libro...').attr('value', ''));
                     $.each(data, function (index, libro) {
-                        var optionText = `${libro.NOMBRELIBRO}`;
-                        select.append($('<option>').text(optionText).attr('value', libro.IDLIBRO));
+                        select.append($('<option>').text(libro.NOMBRELIBRO).attr('value', libro.IDLIBRO));
                     });
+                    // Seleccionar el libro actual si es una edición
+                    select.val('@Model.IDLIBRO');
                 },
                 error: function () {
                     console.error("Error al cargar los libros disponibles.");
@@ -101,5 +103,27 @@
         // Llamar a las funciones para cargar los clientes y libros al cargar el documento
         cargarClientesDisponibles();
         cargarLibrosDisponibles();
+
+        // Manejar el envío del formulario
+        $('#prestamoForm').on('submit', function (e) {
+            e.preventDefault(); // Evitar el envío automático del formulario
+
+            // Obtener los datos del formulario
+            var formData = {
+                IDCLIENTE: $('#IDCLIENTE').val(),
+                IDLIBRO: $('#IDLIBRO').val(),
+                FECHAFINPREST: $('#FECHAFINPREST').val(),
+                DESCRPREST: $('#DESCRPREST').val()
+            };
+
+            // Imprimir los datos en la consola antes de enviar
+            console.log('Datos del formulario:', formData);
+
+            // Simular un tiempo de espera antes de enviar el formulario
+            setTimeout(function () {
+                // Enviar el formulario manualmente después del tiempo de espera
+                $('#prestamoForm').off('submit').submit();
+            }, 4000); // 8 segundos (8000 milisegundos)
+        });
     });
 </script>

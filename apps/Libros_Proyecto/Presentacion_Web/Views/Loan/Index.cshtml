@@ -15,7 +15,7 @@
 
     <!-- Agregar campo para buscar por cédula -->
     <div class="row mb-3">
-        <div class="col-md-6 offset-md-3">
+        @*<div class="col-md-6 offset-md-3">
             @using (Html.BeginForm("SearchByCedula", "Loan", FormMethod.Post, new { @class = "form-inline", id = "searchForm" }))
             {
                 @Html.AntiForgeryToken()
@@ -26,7 +26,7 @@
                     </span>
                 </div>
             }
-        </div>
+        </div>*@
     </div>
 
     <div class="table-responsive">
@@ -45,10 +45,10 @@
                 @foreach (var prestamo in Model)
                 {
                     <tr>
-                        <td>@prestamo.CLIENTE?.NOMBRECLIENTE</td>
-                        <td>@prestamo.LIBRO?.TITULOLIBRO</td>
-                        <td>@prestamo.FECHAINIPREST?.ToString("yyyy-MM-dd")</td>
-                        <td>@prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd")</td>
+                        <td>@prestamo.IDCLIENTE</td>
+                        <td>@prestamo.IDLIBRO</td>
+                        <td>@(prestamo.FECHAINIPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
+                        <td>@(prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
                         <td>@prestamo.DESCRPREST</td>
                         <td>
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal" data-id="@prestamo.IDCLIENTE/@prestamo.IDLIBRO"><i class="fal fa-edit"></i></button>

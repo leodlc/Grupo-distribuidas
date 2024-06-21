@@ -51,7 +51,7 @@ namespace Presentacion_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(PRESTAMO prestamo)
+        public async Task<ActionResult> EditPrestamo(PRESTAMO prestamo)
         {
             if (ModelState.IsValid)
             {

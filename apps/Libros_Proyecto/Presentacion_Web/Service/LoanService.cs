@@ -37,6 +37,7 @@ namespace Presentacion_Web.Service
         public async Task<bool> CreateLoanAsync(PRESTAMO prestamo)
         {
             var prestamoJson = JsonConvert.SerializeObject(prestamo);
+
             System.Diagnostics.Debug.WriteLine("Datos antes de enviar a la API: " + prestamoJson);
             var content = new StringContent(prestamoJson, Encoding.UTF8, "application/json");
   
