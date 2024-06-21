@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using Data;
-using Newtonsoft.Json;
 using Presentacion_Web.Service;
 
 namespace Presentacion_Web.Controllers
@@ -26,19 +25,6 @@ namespace Presentacion_Web.Controllers
             return PartialView("_CrearPrestamoForm", new PRESTAMO());
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(PRESTAMO prestamo)
-        {
-            if (ModelState.IsValid)
-            {
-                System.Diagnostics.Debug.WriteLine("Datos recibidos en el controlador web: " + JsonConvert.SerializeObject(prestamo));
-                await _loanService.CreateLoanAsync(prestamo);
-                return RedirectToAction("Index");
-            }
-            return PartialView("_CrearPrestamoForm", prestamo);
-        }
-
         public async Task<ActionResult> Edit(int idCliente, int idLibro)
         {
             var prestamo = await _loanService.GetLoanByClientAndBookAsync(idCliente, idLibro);
@@ -51,11 +37,18 @@ namespace Presentacion_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(PRESTAMO prestamo)
+        public async Task<ActionResult> Create(PRESTAMO prestamo)
         {
             if (ModelState.IsValid)
             {
-                await _loanService.UpdateLoanAsync(prestamo.IDCLIENTE, prestamo.IDLIBRO, prestamo);
+                if (prestamo.IDCLIENTE == 0 && prestamo.IDLIBRO == 0)
+                {
+                    await _loanService.CreateLoanAsync(prestamo);
+                }
+                else
+                {
+                    await _loanService.UpdateLoanAsync(prestamo.IDCLIENTE, prestamo.IDLIBRO, prestamo);
+                }
                 return RedirectToAction("Index");
             }
             return PartialView("_CrearPrestamoForm", prestamo);
@@ -79,7 +72,6 @@ namespace Presentacion_Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // Nueva acción para cargar clientes disponibles desde LoanService
         public async Task<JsonResult> GetClientesDisponibles()
         {
             var clientes = await _loanService.GetClientesDesdePrestamoAsync();

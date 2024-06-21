@@ -7,26 +7,9 @@
 }
 
 <div class="content-wrapper">
-
     <div class="text-center mb-3">
         <h2>Préstamos Registrados</h2>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createModal">Agregar Préstamo</button>
-    </div>
-
-    <!-- Agregar campo para buscar por cédula -->
-    <div class="row mb-3">
-        @*<div class="col-md-6 offset-md-3">
-                @using (Html.BeginForm("SearchByCedula", "Loan", FormMethod.Post, new { @class = "form-inline", id = "searchForm" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Buscar por cédula" required />
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" type="submit">Buscar</button>
-                        </span>
-                    </div>
-                }
-            </div>*@
     </div>
 
     <div class="table-responsive">
@@ -51,7 +34,10 @@
                         <td>@(prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
                         <td>@prestamo.DESCRPREST</td>
                         <td>
-                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal" data-id="@prestamo.IDCLIENTE/@prestamo.IDLIBRO"><i class="fal fa-edit"></i></button>
+                            <button type="button" class="btn btn-secondary edit-btn" data-toggle="modal" data-target="#editModal"
+                                    data-idcliente="@prestamo.IDCLIENTE" data-idlibro="@prestamo.IDLIBRO">
+                                <i class="fal fa-edit"></i>
+                            </button>
                         </td>
                     </tr>
                 }
@@ -87,12 +73,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Aquí se cargará el formulario de edición -->
+                    <!-- Aquí se cargará el formulario de edición mediante AJAX -->
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- Agrega jQuery -->
@@ -103,55 +88,72 @@
 
 <script>
     $(document).ready(function () {
-        // Cargar nombres de clientes
-        $('.cliente-name').each(function () {
-            var clienteId = $(this).data('idcliente');
-            var element = $(this);
+        // Función para cargar los nombres de clientes
+        function cargarNombresClientes() {
+            $('.cliente-name').each(function () {
+                var clienteId = $(this).data('idcliente');
+                var element = $(this);
+                $.ajax({
+                    url: 'http://localhost:54845/api/client/getbyid/' + clienteId,
+                    type: 'GET',
+                    success: function (data) {
+                        element.text(data.NOMBRECLIENTE + ' ' + data.APELLIDOCLIENTE);
+                    },
+                    error: function () {
+                        element.text('Cliente no encontrado');
+                    }
+                });
+            });
+        }
+
+        // Función para cargar los nombres de libros
+        function cargarNombresLibros() {
+            $('.libro-name').each(function () {
+                var libroId = $(this).data('idlibro');
+                var element = $(this);
+                $.ajax({
+                    url: 'http://localhost:54845/api/book/GetById/' + libroId,
+                    type: 'GET',
+                    success: function (data) {
+                        element.text(data.NOMBRELIBRO);
+                    },
+                    error: function () {
+                        element.text('Libro no encontrado');
+                    }
+                });
+            });
+        }
+
+        // Llamar a las funciones para cargar los nombres de clientes y libros al cargar la página
+        cargarNombresClientes();
+        cargarNombresLibros();
+
+        // Mostrar formulario de edición al abrir el modal de editar
+        $('#editModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var idCliente = button.data('idcliente');
+            var idLibro = button.data('idlibro');
+            var modal = $(this);
+
+            // Cargar el formulario de edición usando AJAX
             $.ajax({
-                url: 'http://localhost:54845/api/client/getbyid/' + clienteId,  // Asegúrate de que esta URL es correcta
+                url: '@Url.Action("Create", "Loan")',
                 type: 'GET',
+                data: { idCliente: idCliente, idLibro: idLibro },
                 success: function (data) {
-                    console.log(data); // Verifica la estructura de la respuesta en la consola
-                    element.text(data.NOMBRECLIENTE + ' ' + data.APELLIDOCLIENTE);
+                    modal.find('.modal-body').html(data);
                 },
                 error: function () {
-                    element.text('Cliente no encontrado');
+                    alert('Error al cargar el formulario de edición.');
                 }
             });
         });
 
-        // Cargar nombres de libros
-        $('.libro-name').each(function () {
-            var libroId = $(this).data('idlibro');
-            var element = $(this);
-            $.ajax({
-                url: 'http://localhost:54845/api/book/GetById/' + libroId,  // Asegúrate de que esta URL es correcta
-                type: 'GET',
-                success: function (data) {
-                    console.log(data); // Verifica la estructura de la respuesta en la consola
-                    element.text(data.NOMBRELIBRO);
-                },
-                error: function () {
-                    element.text('Libro no encontrado');
-                }
-            });
-        });
-    });
-
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var ids = button.data('id').split('/');
-        var idCliente = ids[0];
-        var idLibro = ids[1];
-
-        var modal = $(this);
-        $.ajax({
-            url: '@Url.Action("Edit", "Loan")',
-            type: 'GET',
-            data: { idCliente: idCliente, idLibro: idLibro },
-            success: function (data) {
-                modal.find('.modal-body').html(data);
-            }
+        // Evitar la recarga de la página al cerrar el modal de edición
+        $('#editModal').on('hidden.bs.modal', function () {
+            // Recargar solo los datos de la tabla, no la página completa
+            cargarNombresClientes();
+            cargarNombresLibros();
         });
     });
 </script>
