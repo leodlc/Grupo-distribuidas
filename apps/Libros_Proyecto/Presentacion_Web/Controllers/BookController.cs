@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Data;
+using Newtonsoft.Json;
 using Presentacion_Web.Service;
 
 namespace Presentacion_Web.Controllers
@@ -33,9 +35,11 @@ namespace Presentacion_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(LIBRO libro)
         {
+            
             if (ModelState.IsValid)
             {
                 await _bookService.CreateBookAsync(libro);
+               // Debug.WriteLine(JsonConvert.SerializeObject(libro, Formatting.Indented));
                 return RedirectToAction("Index");
             }
             return PartialView("_CrearLibroForm", libro);
@@ -57,7 +61,7 @@ namespace Presentacion_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bookService.UpdateBookAsync(libro.IDAUTOR, libro);
+                await _bookService.UpdateBookAsync(libro.IDLIBRO, libro);
                 return RedirectToAction("Index");
             }
             return PartialView("_CrearLibroForm", libro);
@@ -90,5 +94,6 @@ namespace Presentacion_Web.Controllers
             await _bookService.DeleteBookAsync(id);
             return RedirectToAction("Index");
         }
+
     }
 }

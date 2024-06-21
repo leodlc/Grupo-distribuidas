@@ -24,7 +24,7 @@ namespace Data
         public int IDAUTOR { get; set; } = -1;
         public int IDGL { get; set; } = -1;
         public string NOMBRELIBRO { get; set; }
-        public Nullable<System.DateTime> ANIOPUBLIBRO { get; set; }
+        public Nullable<System.DateTime> ANIOPUBLIBRO { get; set; }      
         public string IMGLIBRO { get; set; }
         public string ISBNLIBRO { get; set; }
         public Nullable<bool> ESTADOLIBRO { get; set; }
@@ -37,3 +37,4 @@ namespace Data
         public virtual ICollection<PRESTAMO> PRESTAMO { get; set; }
     }
 }
+

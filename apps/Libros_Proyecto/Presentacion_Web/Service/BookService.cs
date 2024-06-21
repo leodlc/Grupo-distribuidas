@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -41,10 +43,17 @@ namespace Presentacion_Web.Service
         {
             var bookJson = JsonConvert.SerializeObject(libro);
             var content = new StringContent(bookJson, Encoding.UTF8, "application/json");
+            Debug.WriteLine(bookJson);
 
             var response = await _httpClient.PostAsync("http://localhost:54845/api/book/Add", content);
+
+            // Imprimir el contenido de la respuesta para depuración
+            var responseContent = await response.Content.ReadAsStringAsync();
+            Debug.WriteLine(responseContent);
+
             return response.IsSuccessStatusCode;
         }
+
 
         public async Task<bool> UpdateBookAsync(int id, LIBRO libro)
         {
