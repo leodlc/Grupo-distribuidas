@@ -1,6 +1,6 @@
 ﻿@model Data.PRESTAMO
 
-@using (Html.BeginForm(Model.IDLIBRO == 0 && Model.IDCLIENTE == 0 ? "Edit": "Create", "Loan", FormMethod.Post, new { id = "prestamoForm" }))
+@using (Html.BeginForm("Create", "Loan", FormMethod.Post, new { id = "prestamoForm" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
@@ -27,16 +27,19 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2" for="FECHAINIPREST">Fecha de inicio del préstamo</label>
+            <label class="control-label col-md-2" for="FECHAINIPREST">Fecha y hora de inicio</label>
             <div class="col-md-10">
                 <input type="date" class="form-control" id="FECHAINIPREST" name="FECHAINIPREST" readonly />
+
+  
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2" for="FECHAFINPREST">Fecha de finalización de préstamo</label>
+            <label class="control-label col-md-2" for="FECHAFINPREST">Fecha y hora de finalización</label>
             <div class="col-md-10">
                 <input type="date" class="form-control" id="FECHAFINPREST" name="FECHAFINPREST" value="@Model.FECHAFINPREST?.ToString(" yyyy-MM-dd")" required />
+
             </div>
         </div>
 
@@ -69,7 +72,6 @@
 
 <script>
     $(document).ready(function () {
-        // Función para cargar los clientes disponibles desde una URL
         function cargarClientesDisponibles() {
             $.ajax({
                 url: '@Url.Action("GetClientesDisponibles", "Loan")',
@@ -83,8 +85,6 @@
                         var optionText = cliente.NOMBRECLIENTE + " " + cliente.APELLIDOCLIENTE;
                         select.append($('<option>').text(optionText).attr('value', cliente.IDCLIENTE));
                     });
-
-                    // Seleccionar el cliente actual
                     select.val('@Model.IDCLIENTE');
                 },
                 error: function () {
@@ -93,7 +93,6 @@
             });
         }
 
-        // Función para cargar los libros disponibles desde una URL
         function cargarLibrosDisponibles() {
             $.ajax({
                 url: '@Url.Action("GetLibrosDisponibles", "Loan")',
@@ -106,8 +105,6 @@
                     $.each(data, function (index, libro) {
                         select.append($('<option>').text(libro.NOMBRELIBRO).attr('value', libro.IDLIBRO));
                     });
-
-                    // Seleccionar el libro actual
                     select.val('@Model.IDLIBRO');
                 },
                 error: function () {
@@ -116,7 +113,6 @@
             });
         }
 
-        // Función para cargar los estados disponibles
         function cargarEstadosDisponibles() {
             var estados = [
                 { texto: 'Activo', valor: 'true' },
@@ -128,17 +124,13 @@
             $.each(estados, function (index, estado) {
                 select.append($('<option>').text(estado.texto).attr('value', estado.valor));
             });
-
-            // Seleccionar el estado actual
             select.val('@Model.ESTADOPREST ? "true" : "false"');
         }
 
-        // Llamar a las funciones para cargar los clientes, libros y estados al cargar el documento
         cargarClientesDisponibles();
         cargarLibrosDisponibles();
         cargarEstadosDisponibles();
 
-        // Establecer la fecha de inicio del préstamo al cargar la página
         var today = new Date().toISOString().split('T')[0];
         $('#FECHAINIPREST').val(today);
     });

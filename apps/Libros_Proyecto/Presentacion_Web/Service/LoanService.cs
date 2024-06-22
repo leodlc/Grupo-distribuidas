@@ -40,7 +40,7 @@ namespace Presentacion_Web.Service
 
             System.Diagnostics.Debug.WriteLine("Datos antes de enviar a la API: " + prestamoJson);
             var content = new StringContent(prestamoJson, Encoding.UTF8, "application/json");
-  
+
             var response = await _httpClient.PostAsync("http://localhost:54845/api/loan/Add", content);
             return response.IsSuccessStatusCode;
         }

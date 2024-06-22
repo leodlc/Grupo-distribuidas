@@ -99,5 +99,14 @@ namespace Presentacion_Web.Controllers
             var libros = await _loanService.GetLibrosDesdePrestamoAsync();
             return Json(libros, JsonRequestBehavior.AllowGet);
         }
+        public async Task<ActionResult> DetallePrestamo(int idCliente, int idLibro)
+        {
+            var prestamo = await _loanService.GetLoanByClientAndBookAsync(idCliente, idLibro);
+            if (prestamo == null)
+            {
+                return HttpNotFound();
+            }
+            return View(prestamo);
+        }
     }
 }

@@ -1,0 +1,96 @@
+﻿@model Data.PRESTAMO
+
+@{
+    ViewBag.Title = "Detalles del Préstamo";
+}
+
+<div class="content-wrapper">
+    <h2>Detalles del Préstamo</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <p><strong>Cliente:</strong> <span id="clienteNombre">Cargando...</span></p>
+            <p><strong>Cédula:</strong> <span id="clienteCedula">Cargando...</span></p>
+            <p><strong>Libro prestado:</strong> <span id="libroNombre">Cargando...</span></p>
+            <p><strong>Fecha de inicio del prestamo:</strong> <span id="FECHAINIPREST">@(Model.FECHAINIPREST?.ToString("yyyy-MM-dd") ?? "")</span></p>
+            <p><strong>Fecha de inicio del prestamo:</strong> <span id="FECHAFINPREST">@(Model.FECHAINIPREST?.ToString("yyyy-MM-dd") ?? "")</span></p>
+            <p><strong>Descripción:</strong> <span id="DESCRPREST">@Model.DESCRPREST</span></p>
+            <p><strong>Estado:</strong> 
+               <span id="ESTADOPREST">
+                   @{
+                       bool estado = @Model.ESTADOPREST ?? false;
+                       string estadoTexto = estado ? "Activo" : "Finalizado";
+                   }
+                   @estadoTexto
+               </span>
+            </p>
+            <p><strong>Tiempo Restante:</strong> <span id="tiempoRestante">Calculando...</span></p>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal" data-id="@Model.IDLIBRO">Editar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Agrega jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agrega los scripts de Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var clienteId = @Model.IDCLIENTE;
+        $.ajax({
+            url: 'http://localhost:54845/api/client/GetById/' + clienteId,
+            type: 'GET',
+            success: function (data) {
+                $('#clienteNombre').text(data.NOMBRECLIENTE + ' ' + data.APELLIDOCLIENTE);
+                $('#clienteCedula').text(data.CEDULACLIENTE);
+            },
+            error: function () {
+                $('#clienteNombre').text('Cliente no encontrado');
+            }
+        });
+
+        var libroId = @Model.IDLIBRO;
+        $.ajax({
+            url: 'http://localhost:54845/api/book/GetById/' + libroId,
+            type: 'GET',
+            success: function (data) {
+                $('#libroNombre').text(data.NOMBRELIBRO);
+            },
+            error: function () {
+                $('#libroNombre').text('Libro no encontrado');
+            }
+        });
+
+        // Calcular y mostrar el tiempo restante inicialmente
+        calcularYMostrarTiempoRestante('@Model.FECHAFINPREST');
+
+        // Actualizar el tiempo restante cada segundo
+        setInterval(function () {
+            calcularYMostrarTiempoRestante('@Model.FECHAFINPREST');
+        }, 1000);
+    });
+
+    function calcularYMostrarTiempoRestante(fechaFinPrestamo) {
+        var fechaFin = new Date(fechaFinPrestamo);
+        var ahora = new Date();
+
+        // Calcula la diferencia en milisegundos entre las fechas
+        var diferencia = fechaFin.getTime() - ahora.getTime();
+
+        // Calcula días, horas, minutos y segundos restantes
+        var dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        diferencia -= dias * (1000 * 60 * 60 * 24);
+        var horas = Math.floor(diferencia / (1000 * 60 * 60));
+        diferencia -= horas * (1000 * 60 * 60);
+        var minutos = Math.floor(diferencia / (1000 * 60));
+        diferencia -= minutos * (1000 * 60);
+        var segundos = Math.floor(diferencia / 1000);
+
+        // Formatea el texto para mostrar el tiempo restante
+        var tiempoRestanteTexto = dias + " días, " + horas + " horas, " + minutos + " minutos, " + segundos + " segundos";
+
+        // Muestra el tiempo restante en el elemento HTML correspondiente
+        $('#tiempoRestante').text(tiempoRestanteTexto);
+    }
+</script>

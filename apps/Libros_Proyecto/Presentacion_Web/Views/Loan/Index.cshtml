@@ -1,4 +1,4 @@
-﻿﻿@model IEnumerable<Data.PRESTAMO>
+﻿@model IEnumerable<Data.PRESTAMO>
 
 @Html.Partial("_NavBar")
 
@@ -31,8 +31,8 @@
                     <tr>
                         <td data-idcliente="@prestamo.IDCLIENTE" class="cliente-name"></td>
                         <td data-idlibro="@prestamo.IDLIBRO" class="libro-name"></td>
-                        <td>@(prestamo.FECHAINIPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
-                        <td>@(prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
+                        <td>@(prestamo.FECHAINIPREST?.ToString("yyyy-MM-dd") ?? "")</td>
+                        <td>@(prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd") ?? "")</td>
                         <td>@prestamo.DESCRPREST</td>
                         <td>
                             @{
@@ -43,10 +43,10 @@
                         </td>
                         <td>
                             <div class="actions-container">
-                                <button type="button" class="btn btn-outline-success btn-outline-success-custom" data-toggle="modal" data-target="#editModal"
-                                        data-idcliente="@prestamo.IDCLIENTE" data-idlibro="@prestamo.IDLIBRO">
+                                <a class="btn btn-outline-success btn-outline-success-custom"
+                                   href="@Url.Action("DetallePrestamo", "Loan", new { idCliente = prestamo.IDCLIENTE, idLibro = prestamo.IDLIBRO })">
                                     <i class="fas fa-edit"></i>
-                                </button>
+                                </a>
                                 <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#deleteModal">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -74,27 +74,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal para Editar -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="editModalLabel">Editar Préstamo</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Aquí se cargará el formulario de edición mediante AJAX -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="guardarCambiosBtn">Guardar Cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Agrega jQuery -->
@@ -103,30 +82,13 @@
 <!-- Agrega los scripts de Bootstrap -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
 <script>
 
     $(document).ready(function () {
-        // Función para cargar los nombres de clientes
-                // Función para cargar el formulario de edición al mostrar el modal
-        $('#editModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var idcliente = button.data('idcliente');
-            var idlibro = button.data('idlibro');
-            var modal = $(this);
-            $.ajax({
-                url: '@Url.Action("Edit", "Loan")',
-                type: 'GET',
-                data: { idcliente:idcliente, idlibro:idlibro },
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function () {
-                    modal.find('.modal-body').html('<p>Error al cargar el formulario de edición.</p>');
-                }
-            });
-        });
 
-        $('#guardarCambiosBtn').click(function () {
+
+        @*$('#guardarCambiosBtn').click(function () {
             var formData = $('#editarPrestamoForm').serialize();
 
             $.ajax({
@@ -143,7 +105,7 @@
                     alert('Error al guardar los cambios.');
                 }
             });
-        });
+        });*@
 
 
         function cargarNombresClientes() {
