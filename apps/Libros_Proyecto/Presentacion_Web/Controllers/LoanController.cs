@@ -31,17 +31,17 @@ namespace Presentacion_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //await _loanService.CreateLoanAsync(prestamo);
-                //return RedirectToAction("Index");
-                if (prestamo.IDCLIENTE == 0 && prestamo.IDLIBRO == 0)
-                {
-                    await _loanService.CreateLoanAsync(prestamo);
-                }
-                else
-                {
-                    //await _loanService.UpdateLoanAsync(prestamo.IDCLIENTE, prestamo.IDLIBRO, prestamo);
-                }
+                await _loanService.CreateLoanAsync(prestamo);
                 return RedirectToAction("Index");
+                //if (prestamo.IDCLIENTE == 0 && prestamo.IDLIBRO == 0)
+                //{
+                //    await _loanService.CreateLoanAsync(prestamo);
+                //}
+                //else
+                //{
+                //    await _loanService.UpdateLoanAsync(prestamo.IDCLIENTE, prestamo.IDLIBRO, prestamo);
+                //}
+                //return RedirectToAction("Index");
             }
             return PartialView("_CrearPrestamoForm", prestamo);
         }

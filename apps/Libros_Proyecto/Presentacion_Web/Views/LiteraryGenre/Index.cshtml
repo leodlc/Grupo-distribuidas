@@ -30,7 +30,13 @@
                         <td>@genre.NOMBREGL</td>
                         <td>@genre.DESCRIPGL</td>
                         <td>
-                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal" data-id="@genre.IDGL"><i class="fal fa-edit"></i></button>
+                            <div>
+                                <button type="button" class="btn btn-outline-success btn-outline-success-custom" data-toggle="modal" data-target="#editModal" data-id="@genre.IDGL"><i class="fas fa-edit"></i></button>
+                                @*<button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#deleteModal">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>*@
+
+                            </div>
                         </td>
                     </tr>
                 }
