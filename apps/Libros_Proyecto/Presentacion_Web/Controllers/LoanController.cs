@@ -25,16 +25,6 @@ namespace Presentacion_Web.Controllers
             return PartialView("_CrearPrestamoForm", new PRESTAMO());
         }
 
-        public async Task<ActionResult> Edit(int idCliente, int idLibro)
-        {
-            var prestamo = await _loanService.GetLoanByClientAndBookAsync(idCliente, idLibro);
-            if (prestamo == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView("_CrearPrestamoForm", prestamo);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(PRESTAMO prestamo)
@@ -49,8 +39,32 @@ namespace Presentacion_Web.Controllers
                 }
                 else
                 {
-                    await _loanService.UpdateLoanAsync(prestamo.IDCLIENTE, prestamo.IDLIBRO, prestamo);
+                    //await _loanService.UpdateLoanAsync(prestamo.IDCLIENTE, prestamo.IDLIBRO, prestamo);
                 }
+                return RedirectToAction("Index");
+            }
+            return PartialView("_CrearPrestamoForm", prestamo);
+        }
+
+        public async Task<ActionResult> Edit(int idCliente, int idLibro)
+        {
+            var prestamo = await _loanService.GetLoanByClientAndBookAsync(idCliente, idLibro);
+            if (prestamo == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("_CrearPrestamoForm", prestamo);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(int idCliente, int idLibro, PRESTAMO prestamo)
+        {
+            if (ModelState.IsValid)
+            {
+                //prestamo.IDCLIENTE = idCliente;
+                //prestamo.IDLIBRO = idLibro;
+                await _loanService.UpdateLoanAsync(idCliente, idLibro, prestamo);
                 return RedirectToAction("Index");
             }
             return PartialView("_CrearPrestamoForm", prestamo);

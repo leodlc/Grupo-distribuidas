@@ -1,30 +1,18 @@
 ﻿@model Data.PRESTAMO
 
-@using (Html.BeginForm("Edit", "Loan", FormMethod.Post, new { id = "prestamoForm" }))
+@using (Html.BeginForm("Edit", "Loan", FormMethod.Post, new { id = "editarPrestamoForm" }))
 {
     @Html.AntiForgeryToken()
+
+    <!-- Mantenemos los campos ocultos para IDCLIENTE e IDLIBRO -->
+    <input type="hidden" id="IDCLIENTE" name="IDCLIENTE" value="@Model.IDCLIENTE" />
+    <input type="hidden" id="IDLIBRO" name="IDLIBRO" value="@Model.IDLIBRO" />
+
     <div class="form-horizontal">
-        <h4>Editar Préstamo</h4>
+        <h4>Editar Préstamo XD</h4>
         <hr />
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        <div class="form-group">
-            @Html.Label("Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <select class="form-control" id="IDCLIENTE" name="IDCLIENTE" required>
-                    <option value="">Seleccione un cliente...</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("Libro", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <select class="form-control" id="IDLIBRO" name="IDLIBRO" required>
-                    <option value="">Seleccione un libro...</option>
-                </select>
-            </div>
-        </div>
 
         <div class="form-group">
             <label class="control-label col-md-2" for="FECHAINIPREST">Fecha de inicio del préstamo</label>
@@ -48,71 +36,61 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-md-2" for="ESTADOPREST">Estado</label>
+            <div class="col-md-10">
+                <select class="form-control" id="ESTADOPREST" name="ESTADOPREST" required>
+                    <option value="true" @(Model.ESTADOPREST == true ? "selected" : "")>Activo</option>
+                    <option value="false" @(Model.ESTADOPREST == false ? "selected" : "")>Finalizado</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+                <input type="submit" value="Guardar cambios" class="btn btn-success" />
             </div>
         </div>
     </div>
 }
 
-<!-- Agregar jQuery -->
+<!-- Agrega jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agrega los scripts de Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        // Función para cargar los clientes disponibles desde una URL
-        function cargarClientesDisponibles() {
-            $.ajax({
-                url: 'http://localhost:54845/api/Client/GetAll',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    var select = $('#IDCLIENTE');
-                    select.empty();
-                    select.append($('<option>').text('Seleccione un cliente...').attr('value', ''));
-                    $.each(data, function (index, cliente) {
-                        var optionText = cliente.NOMBRECLIENTE + " " + cliente.APELLIDOCLIENTE;
-                        select.append($('<option>').text(optionText).attr('value', cliente.IDCLIENTE));
-                    });
+        // Capturar el evento de envío del formulario
+        $('#editarPrestamoForm').submit(function (event) {
+            event.preventDefault(); // Prevenir el envío por defecto del formulario
 
-                    // Seleccionar el cliente actual
-                    select.val('@Model.IDCLIENTE');
+            var idCliente = $('#IDCLIENTE').val();
+            var idLibro = $('#IDLIBRO').val();
+            var formData = {
+                IDCLIENTE: idCliente,
+                IDLIBRO: idLibro,
+                FECHAINIPREST: $('#FECHAINIPREST').val(),
+                FECHAFINPREST: $('#FECHAFINPREST').val(),
+                DESCRPREST: $('#DESCRPREST').val(),
+                ESTADOPREST: $('#ESTADOPREST').val() === 'true' // Convertir a booleano
+            };
+
+            $.ajax({
+                url: 'http://localhost:54845/api/loan/update/' + idCliente + '/' + idLibro,
+                type: 'PUT', // Cambiar a PUT
+                contentType: 'application/json',
+                data: JSON.stringify(formData), // Enviar los datos como JSON
+                success: function (response) {
+                    // Manejar la respuesta exitosa si es necesario
+                    console.log('Actualización exitosa:', response);
+                    // Opcionalmente, cerrar el modal o actualizar la página
                 },
-                error: function () {
-                    console.error("Error al cargar los clientes disponibles.");
+                error: function (xhr, status, error) {
+                    // Manejar errores si es necesario
+                    console.error('Error al actualizar:', error);
                 }
             });
-        }
-
-        // Función para cargar los libros disponibles desde una URL
-        function cargarLibrosDisponibles() {
-            $.ajax({
-                url: 'http://localhost:54845/api/book/getal',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    var select = $('#IDLIBRO');
-                    select.empty();
-                    select.append($('<option>').text('Seleccione un libro...').attr('value', ''));
-                    $.each(data, function (index, libro) {
-                        select.append($('<option>').text(libro.NOMBRELIBRO).attr('value', libro.IDLIBRO));
-                    });
-
-                    // Seleccionar el libro actual
-                    select.val('@Model.IDLIBRO');
-                },
-                error: function () {
-                    console.error("Error al cargar los libros disponibles.");
-                }
-            });
-        }
-
-        // Llamar a las funciones para cargar los clientes y libros al cargar el documento
-        cargarClientesDisponibles();
-        cargarLibrosDisponibles();
-
-        // Establecer la fecha de inicio del préstamo al cargar la página
-        var today = new Date().toISOString().split('T')[0];
-        $('#FECHAINIPREST').val(today);
+        });
     });
 </script>

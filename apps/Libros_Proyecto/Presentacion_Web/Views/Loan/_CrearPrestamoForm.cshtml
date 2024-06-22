@@ -1,6 +1,6 @@
 ﻿@model Data.PRESTAMO
 
-@using (Html.BeginForm("Create", "Loan", FormMethod.Post, new { id = "prestamoForm" }))
+@using (Html.BeginForm(Model.IDLIBRO == 0 && Model.IDCLIENTE == 0 ? "Edit": "Create", "Loan", FormMethod.Post, new { id = "prestamoForm" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
