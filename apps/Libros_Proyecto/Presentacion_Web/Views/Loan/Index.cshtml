@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Data.PRESTAMO>
+﻿﻿@model IEnumerable<Data.PRESTAMO>
 
 @Html.Partial("_NavBar")
 
@@ -21,6 +21,7 @@
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Descripción</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -33,6 +34,13 @@
                         <td>@(prestamo.FECHAINIPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
                         <td>@(prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd HH:mm:ss") ?? "")</td>
                         <td>@prestamo.DESCRPREST</td>
+                        <td>
+                            @{
+                                bool estado = prestamo.ESTADOPREST ?? false;
+                                string estadoTexto = estado ? "Activo" : "Finalizado";
+                            }
+                            @estadoTexto
+                        </td>
                         <td>
                             <button type="button" class="btn btn-secondary edit-btn" data-toggle="modal" data-target="#editModal"
                                     data-idcliente="@prestamo.IDCLIENTE" data-idlibro="@prestamo.IDLIBRO">
@@ -128,32 +136,6 @@
         cargarNombresClientes();
         cargarNombresLibros();
 
-        // Mostrar formulario de edición al abrir el modal de editar
-        $('#editModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var idCliente = button.data('idcliente');
-            var idLibro = button.data('idlibro');
-            var modal = $(this);
 
-            // Cargar el formulario de edición usando AJAX
-            $.ajax({
-                url: '@Url.Action("Create", "Loan")',
-                type: 'GET',
-                data: { idCliente: idCliente, idLibro: idLibro },
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function () {
-                    alert('Error al cargar el formulario de edición.');
-                }
-            });
-        });
-
-        // Evitar la recarga de la página al cerrar el modal de edición
-        $('#editModal').on('hidden.bs.modal', function () {
-            // Recargar solo los datos de la tabla, no la página completa
-            cargarNombresClientes();
-            cargarNombresLibros();
-        });
     });
 </script>

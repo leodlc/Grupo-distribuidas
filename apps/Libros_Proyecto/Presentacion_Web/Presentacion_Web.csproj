@@ -252,6 +252,7 @@
     <Content Include="Views\Client\_CrearClienteForm.cshtml" />
     <Content Include="Views\Loan\Index.cshtml" />
     <Content Include="Views\Loan\_CrearPrestamoForm.cshtml" />
+    <Content Include="Views\Loan\_EditarPrestamoForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
