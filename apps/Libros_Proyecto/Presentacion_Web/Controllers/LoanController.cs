@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Data;
 using Presentacion_Web.Service;
@@ -56,19 +57,30 @@ namespace Presentacion_Web.Controllers
             return PartialView("_CrearPrestamoForm", prestamo);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Edit(int idCliente, int idLibro, PRESTAMO prestamo)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //prestamo.IDCLIENTE = idCliente;
+        //        //prestamo.IDLIBRO = idLibro;
+        //        await _loanService.UpdateLoanAsync(idCliente, idLibro, prestamo);
+        //        return RedirectToAction("Index");
+        //    }
+        //    return PartialView("_CrearPrestamoForm", prestamo);
+        //}
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int idCliente, int idLibro, PRESTAMO prestamo)
+        public async Task<JsonResult> Edit(int idCliente, int idLibro, PRESTAMO prestamo)
         {
             if (ModelState.IsValid)
             {
-                //prestamo.IDCLIENTE = idCliente;
-                //prestamo.IDLIBRO = idLibro;
                 await _loanService.UpdateLoanAsync(idCliente, idLibro, prestamo);
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
-            return PartialView("_CrearPrestamoForm", prestamo);
+            return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
         }
+
 
         public async Task<ActionResult> Delete(int idCliente, int idLibro)
         {
