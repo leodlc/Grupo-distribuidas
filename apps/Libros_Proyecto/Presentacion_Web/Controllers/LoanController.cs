@@ -120,5 +120,15 @@ namespace Presentacion_Web.Controllers
             }
             return View(prestamo);
         }
+        [HttpPost]
+        public async Task<JsonResult> Update(int idCliente, int idLibro, PRESTAMO prestamo)
+        {
+            if (ModelState.IsValid)
+            {
+                await _loanService.UpdateLoanAsync(idCliente, idLibro, prestamo);
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+        }
     }
 }
