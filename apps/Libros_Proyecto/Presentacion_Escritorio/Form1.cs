@@ -44,6 +44,7 @@ namespace Presentacion_Escritorio
         {
             var tableLayoutPanel = new TableLayoutPanel
             {
+                //Size = new System.Drawing.Size(1280, 720),
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
                 RowCount = 1
@@ -204,7 +205,8 @@ namespace Presentacion_Escritorio
 
             dataGridView = new DataGridView
             {
-                Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 100),
+                Size = new System.Drawing.Size(740, 600),
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             mainPanel.Controls.Add(dataGridView);
@@ -252,7 +254,9 @@ namespace Presentacion_Escritorio
 
             var booksPanel = new FlowLayoutPanel
             {
-                Dock = DockStyle.Fill,
+                //Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
                 AutoScroll = true
             };
             mainPanel.Controls.Add(booksPanel);
@@ -414,12 +418,13 @@ namespace Presentacion_Escritorio
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
-            //btnAddClient.Click += BtnAddClient_Click;
+            btnAddClient.Click += BtnAddClient_Click;
             mainPanel.Controls.Add(btnAddClient);
 
             dataGridView = new DataGridView
             {
-                Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             mainPanel.Controls.Add(dataGridView);
@@ -435,6 +440,12 @@ namespace Presentacion_Escritorio
                 var clients = await clientService.GetClientsAsync();
                 if (clients != null && clients.Any())
                 {
+                    // Imprimir los datos de los clientes en la consola
+                    foreach (var client in clients)
+                    {
+                        Console.WriteLine($"ID: {client.IDCLIENTE}, Cédula: {client.CEDULACLIENTE}, Nombre: {client.NOMBRECLIENTE}, Apellido: {client.APELLIDOCLIENTE}, Teléfono: {client.TELEFONOCLIENTE}, Dirección: {client.DIRECCLIENTE}, Fecha de Nacimiento: {client.FECHANACCLIENTE}, Estado: {client.ESTADOCLIENTE}");
+                    }
+
                     dataGridView.DataSource = null;
                     dataGridView.DataSource = clients;
                 }
@@ -445,39 +456,32 @@ namespace Presentacion_Escritorio
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine("Error loading clients: " + ex.Message);
+                Console.WriteLine("Error loading clients: " + ex.Message);
             }
         }
 
-        //private async void BtnAddClient_Click(object sender, EventArgs e)
-        //{
-        //    var addClientForm = new AddClientForm();
-        //    var result = addClientForm.ShowDialog();
 
-        //    if (result == DialogResult.OK)
-        //    {
-        //        var newClient = addClientForm.NewClient;
-        //        var confirmation = MessageBox.Show(
-        //            $"Nombre: {newClient.NOMBRECLIENTE}\nApellido: {newClient.APELLIDOCLIENTE}\nCédula: {newClient.CEDULACLIENTE}\nTeléfono: {newClient.TELEFONOCLIENTE}\nDirección: {newClient.DIRECCLIENTE}\nFecha de Nacimiento: {newClient.FECHANACCLIENTE}\nEstado: {newClient.ESTADOCLIENTE}",
-        //            "Confirmar Datos",
-        //            MessageBoxButtons.OKCancel);
-
-                //if (confirmation == DialogResult.OK)
-                //{
-                //    await clientService.AddClientAsync(newClient);
-                //    LoadClientsPage();
-                //}
-        //    }
-        //}
-
-        private void MenuButton_Click(object sender, EventArgs e)
+        private async void BtnAddClient_Click(object sender, EventArgs e)
         {
-            var button = sender as Button;
-            if (button != null)
+            var addClientForm = new AddClientForm();
+            var result = addClientForm.ShowDialog();
+
+            if (result == DialogResult.OK)
             {
-                MessageBox.Show($"Botón {button.Text} presionado.");
+                var newClient = addClientForm.NewClient;
+                var confirmation = MessageBox.Show(
+                    $"Nombre: {newClient.NOMBRECLIENTE}\nApellido: {newClient.APELLIDOCLIENTE}\nCédula: {newClient.CEDULACLIENTE}\nTeléfono: {newClient.TELEFONOCLIENTE}\nDirección: {newClient.DIRECCLIENTE}\nFecha de Nacimiento: {newClient.FECHANACCLIENTE}\nEstado: {newClient.ESTADOCLIENTE}",
+                    "Confirmar Datos",
+                    MessageBoxButtons.OKCancel);
+
+                if (confirmation == DialogResult.OK)
+                {
+                    await clientService.AddClientAsync(newClient);
+                    LoadClientsPage();
+                }
             }
         }
+
 
         private void LoadGenresPage()
         {
@@ -492,12 +496,13 @@ namespace Presentacion_Escritorio
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
-            //btnAddGenre.Click += BtnAddGenre_Click;
+            btnAddGenre.Click += BtnAddGenre_Click;
             mainPanel.Controls.Add(btnAddGenre);
 
             dataGridView = new DataGridView
             {
-                Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             mainPanel.Controls.Add(dataGridView);
@@ -527,7 +532,7 @@ namespace Presentacion_Escritorio
             }
         }
 
-        /*private async void BtnAddGenre_Click(object sender, EventArgs e)
+        private async void BtnAddGenre_Click(object sender, EventArgs e)
         {
             var addGenreForm = new AddGenreForm();
             var result = addGenreForm.ShowDialog();
@@ -546,7 +551,7 @@ namespace Presentacion_Escritorio
                     LoadGenresPage();
                 }
             }
-        }*/
+        }
 
         private void LoadAuthorsPage()
         {
@@ -561,12 +566,14 @@ namespace Presentacion_Escritorio
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
-            //btnAddAuthor.Click += BtnAddAuthor_Click;
+            btnAddAuthor.Click += BtnAddAuthor_Click;
             mainPanel.Controls.Add(btnAddAuthor);
 
             dataGridView = new DataGridView
             {
-                Dock = DockStyle.Fill,
+                //Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             mainPanel.Controls.Add(dataGridView);
@@ -596,7 +603,7 @@ namespace Presentacion_Escritorio
             }
         }
 
-        /*private async void BtnAddAuthor_Click(object sender, EventArgs e)
+        private async void BtnAddAuthor_Click(object sender, EventArgs e)
         {
             var addAuthorForm = new AddAuthorForm();
             var result = addAuthorForm.ShowDialog();
@@ -615,8 +622,6 @@ namespace Presentacion_Escritorio
                     LoadAuthorsPage();
                 }
             }
-        }*/
-
-
+        }
     }
 }

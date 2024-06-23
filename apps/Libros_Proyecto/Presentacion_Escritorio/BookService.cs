@@ -19,8 +19,8 @@ namespace Presentacion_Escritorio
         public bool ESTADOLIBRO { get; set; }
         public string EDITORIALLIBRO { get; set; }
         public int STOCKLIBRO { get; set; }
-        public string AUTOR { get; set; }
-        public string GENEROLITERARIO { get; set; }
+        public Author AUTOR { get; set; }
+        public LiteraryGenre GENEROLITERARIO { get; set; }
         public List<object> PRESTAMO { get; set; }
     }
 

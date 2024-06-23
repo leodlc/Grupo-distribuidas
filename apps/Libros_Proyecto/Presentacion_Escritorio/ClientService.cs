@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -47,24 +49,27 @@ namespace Presentacion_Escritorio
             }
         }
 
-        //public async Task AddClientAsync(Client client)
-        //{
-        //    try
-        //    {
-        //        using (var httpClient = new HttpClient())
-        //        {
-        //            var response = await httpClient.PostAsJsonAsync(BaseUrl + "api/Client/Add", client);
-        //            response.EnsureSuccessStatusCode();
-        //        }
-        //    }
-        //    catch (HttpRequestException httpRequestException)
-        //    {
-        //        System.Console.WriteLine("Error posting data: " + httpRequestException.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Console.WriteLine("Error serializing data: " + ex.Message);
-        //    }
-        //}
+        public async Task AddClientAsync(Client client)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(client);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await httpClient.PostAsync(BaseUrl + "api/Client/Add", content);
+                    response.EnsureSuccessStatusCode();
+                }
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                System.Console.WriteLine("Error posting data: " + httpRequestException.Message);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error serializing data: " + ex.Message);
+            }
+        }
     }
 }

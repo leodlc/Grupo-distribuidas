@@ -14,8 +14,8 @@ namespace Presentacion_Escritorio
         public DateTime FECHAFINPREST { get; set; }
         public string DESCRPREST { get; set; }
         public bool ESTADOPREST { get; set; }
-        public string CLIENTE { get; set; }
-        public string LIBRO { get; set; }
+        public Client CLIENTE { get; set; }
+        public Book LIBRO { get; set; }
     }
 
     public class LoanService

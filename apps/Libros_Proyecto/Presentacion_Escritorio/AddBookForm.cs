@@ -26,7 +26,7 @@ namespace Presentacion_Escritorio
             var txtGenre = new TextBox { Dock = DockStyle.Top, Name = "txtGenre" };
 
             var lblYear = new Label { Text = "Año de Publicación:", Dock = DockStyle.Top };
-            var txtYear = new TextBox { Dock = DockStyle.Top, Name = "txtYear" };
+            var dtpYear = new DateTimePicker { Dock = DockStyle.Top, Name = "dtpYear", Format = DateTimePickerFormat.Short };
 
             var lblImageUrl = new Label { Text = "URL de Imagen:", Dock = DockStyle.Top };
             var txtImageUrl = new TextBox { Dock = DockStyle.Top, Name = "txtImageUrl" };
@@ -59,7 +59,7 @@ namespace Presentacion_Escritorio
             this.Controls.Add(lblISBN);
             this.Controls.Add(txtImageUrl);
             this.Controls.Add(lblImageUrl);
-            this.Controls.Add(txtYear);
+            this.Controls.Add(dtpYear);
             this.Controls.Add(lblYear);
             this.Controls.Add(txtGenre);
             this.Controls.Add(lblGenre);
@@ -70,7 +70,7 @@ namespace Presentacion_Escritorio
 
             this.Text = "Agregar Nuevo Libro";
             this.Size = new Size(400, 600);
-            this.Load += AddBookForm_Load; // Asociar el evento Load
+            this.Load += AddBookForm_Load;
         }
 
         private void AddBookForm_Load(object sender, EventArgs e)
@@ -83,26 +83,33 @@ namespace Presentacion_Escritorio
             var txtName = this.Controls["txtName"] as TextBox;
             var txtAuthor = this.Controls["txtAuthor"] as TextBox;
             var txtGenre = this.Controls["txtGenre"] as TextBox;
-            var txtYear = this.Controls["txtYear"] as TextBox;
+            var dtpYear = this.Controls["dtpYear"] as DateTimePicker;
             var txtImageUrl = this.Controls["txtImageUrl"] as TextBox;
             var txtISBN = this.Controls["txtISBN"] as TextBox;
             var txtPublisher = this.Controls["txtPublisher"] as TextBox;
             var txtStock = this.Controls["txtStock"] as TextBox;
 
+            if (!int.TryParse(txtStock.Text, out int stock))
+            {
+                MessageBox.Show("Por favor ingrese un número de stock válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var newBook = new Book
             {
                 NOMBRELIBRO = txtName.Text,
-                AUTOR = txtAuthor.Text,
-                GENEROLITERARIO = txtGenre.Text,
-                ANIOPUBLIBRO = DateTime.Parse(txtYear.Text),
+                AUTOR = new Author { NOMBREAUTOR = txtAuthor.Text },
+                GENEROLITERARIO = new LiteraryGenre { NOMBREGL = txtGenre.Text },
+                ANIOPUBLIBRO = dtpYear.Value,
                 IMGLIBRO = txtImageUrl.Text,
                 ISBNLIBRO = txtISBN.Text,
                 EDITORIALLIBRO = txtPublisher.Text,
-                STOCKLIBRO = int.Parse(txtStock.Text)
+                STOCKLIBRO = stock,
+                ESTADOLIBRO = true
             };
 
             var confirmation = MessageBox.Show(
-                $"Nombre: {newBook.NOMBRELIBRO}\nAutor: {newBook.AUTOR}\nGénero Literario: {newBook.GENEROLITERARIO}\nAño: {newBook.ANIOPUBLIBRO}\nURL de Imagen: {newBook.IMGLIBRO}\nISBN: {newBook.ISBNLIBRO}\nEditorial: {newBook.EDITORIALLIBRO}\nStock: {newBook.STOCKLIBRO}",
+                $"Nombre: {newBook.NOMBRELIBRO}\nAutor: {newBook.AUTOR.NOMBREAUTOR}\nGénero Literario: {newBook.GENEROLITERARIO.NOMBREGL}\nAño: {newBook.ANIOPUBLIBRO}\nURL de Imagen: {newBook.IMGLIBRO}\nISBN: {newBook.ISBNLIBRO}\nEditorial: {newBook.EDITORIALLIBRO}\nStock: {newBook.STOCKLIBRO}",
                 "Confirmar Datos",
                 MessageBoxButtons.OKCancel);
 

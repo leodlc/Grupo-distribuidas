@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -42,13 +44,16 @@ namespace Presentacion_Escritorio
             }
         }
 
-        /*public async Task AddLiteraryGenreAsync(LiteraryGenre genre)
+        public async Task AddLiteraryGenreAsync(LiteraryGenre genre)
         {
             try
             {
                 using (var httpClient = new HttpClient())
                 {
-                    var response = await httpClient.PostAsJsonAsync(BaseUrl + "api/LiteraryGenre/Add", genre);
+                    var json = JsonConvert.SerializeObject(genre);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await httpClient.PostAsync(BaseUrl + "api/LiteraryGenre/Add", content);
                     response.EnsureSuccessStatusCode();
                 }
             }
@@ -60,6 +65,6 @@ namespace Presentacion_Escritorio
             {
                 System.Console.WriteLine("Error serializing data: " + ex.Message);
             }
-        }*/
+        }
     }
 }
