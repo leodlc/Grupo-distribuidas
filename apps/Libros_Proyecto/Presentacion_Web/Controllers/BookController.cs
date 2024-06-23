@@ -35,7 +35,7 @@ namespace Presentacion_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(LIBRO libro)
         {
-            
+            Debug.WriteLine(JsonConvert.SerializeObject(libro, Formatting.Indented));
             if (ModelState.IsValid)
             {
                 await _bookService.CreateBookAsync(libro);
