@@ -293,8 +293,8 @@ namespace Presentacion_Escritorio
             var panel = new Panel
             {
                 Width = 200,
-                Height = 300,
-                Margin = new Padding(10)
+                Height = 450,
+                Margin = new Padding(10),
             };
 
             var pictureBox = new PictureBox
