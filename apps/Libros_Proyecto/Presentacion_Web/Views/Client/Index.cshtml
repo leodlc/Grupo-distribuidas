@@ -103,8 +103,141 @@
             type: 'GET',
             data: { id: id },
             success: function (data) {
+                console.log(data)
                 modal.find('.modal-body').html(data);
+                //addValidationScripts();
             }
         });
     });
+    $('#createModal').on('show.bs.modal', function (event) {
+        addValidationScripts(); // Agrega validaciones cuando se muestra el modal de creación
+    });
+
+    function addValidationScripts() {
+        // Uso de un selector más específico para evitar conflictos
+        $('#createModal #NOMBRECLIENTE, #editModal #NOMBRECLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas) y espacios (charCode 32)
+            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#createModal #APELLIDOCLIENTE, #editModal #APELLIDOCLIENTE ').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), espacio y la letra "ñ" (charCode 241)
+            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32 || charCode == 241) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#createModal #TELEFONOCLIENTE, #editModal #TELEFONOCLIENTE').keypress(function (e) {
+            var charCode = e.which;
+
+            // Permite solamente números (0-9)
+            if (charCode >= 48 && charCode <= 57) {
+                return true; // permite la entrada del carácter
+            } else {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        // Validación del campo Dirección
+        $('#createModal #DIRECCLIENTE, #editModal #DIRECCLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), números, espacio, guiones, comas y slashes
+            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57) || charCode == 32 || charCode == 45 || charCode == 44 || charCode == 47) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        // Validación de la fecha al cambiar su valor
+        $('#createModal #FECHANACCLIENTE, #editModal #FECHANACCLIENTE').change(function () {
+            var fechaNacimiento = $(this).val();
+            var fechaIngresada = new Date(fechaNacimiento);
+            var hoy = new Date();
+
+            // Calcula la edad mínima requerida (18 años)
+            var edadMinima = new Date();
+            edadMinima.setFullYear(edadMinima.getFullYear() - 18);
+
+            // Verifica si la fecha de nacimiento es mayor de 18 años y no en el futuro
+            if (fechaIngresada > hoy || fechaIngresada >= edadMinima) {
+                alert('La fecha de nacimiento debe ser válida y el cliente debe ser mayor de 18 años.');
+                $(this).val(''); // Borra el valor ingresado
+            }
+        });
+
+
+        // Validación del formulario al momento de enviar
+        $('#createModal #clienteForm, #editModal #clienteForm').submit(function (e) {
+            var nombre = $('#NOMBRECLIENTE').val();
+            var apellido = $('#APELLIDOCLIENTE').val();
+            var telefono = $('#TELEFONOCLIENTE').val();
+            var direccion = $('#DIRECCLIENTE').val();
+
+            var nombreError = $('#nombreError');
+            var apellidoError = $('#apellidoError');
+            var telefonoError = $('#telefonoError');
+            var direccionError = $('#direccionError');
+
+            // Validación del campo Nombre
+            var nombrePattern = /^[a-zA-Z\s]+$/;
+            if (!nombrePattern.test(nombre)) {
+                nombreError.text('El nombre solo puede contener letras y espacios.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                nombreError.text('');
+            }
+
+            // Validación del campo Apellido
+            var apellidoPattern = /^[a-zA-Z\sñÑ]+$/;
+            if (!apellidoPattern.test(apellido)) {
+                apellidoError.text('El apellido solo puede contener letras, espacios y la letra "ñ".');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                apellidoError.text('');
+            }
+
+            // Validación del campo Teléfono
+            var telefonoPattern = /^[a-zA-Z0-9\s]+$/;
+            if (!telefonoPattern.test(telefono)) {
+                telefonoError.text('El teléfono solo puede contener letras y números.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                telefonoError.text('');
+            }
+
+            // Validación del campo Dirección
+            var direccionPattern = /^[a-zA-Z0-9\s\-\/,]+$/;
+            if (!direccionPattern.test(direccion)) {
+                direccionError.text('La dirección solo puede contener letras, números, espacios, guiones, comas y slashes.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                direccionError.text('');
+            }
+
+            var fechaNacimiento = $('#FECHANACCLIENTE').val();
+            var fechaIngresada = new Date(fechaNacimiento);
+            var hoy = new Date();
+
+            // Calcula la edad mínima requerida (18 años)
+            var edadMinima = new Date();
+            edadMinima.setFullYear(edadMinima.getFullYear() - 18);
+
+            // Verifica si la fecha de nacimiento es mayor de 18 años y no en el futuro
+            if (fechaIngresada > hoy || fechaIngresada >= edadMinima) {
+                alert('La fecha de nacimiento debe ser válida y el cliente debe ser mayor de 18 años.');
+                e.preventDefault(); // Evita el envío del formulario
+            }
+        });
+
+       
+    }
 </script>

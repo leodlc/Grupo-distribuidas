@@ -72,24 +72,24 @@ namespace Presentacion_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(CLIENTE cliente)
         {
-            try
-            {
-                Validations.VerificaIdentificacion(cliente.CEDULACLIENTE);
-                Validations.ValidaNombre(cliente.NOMBRECLIENTE);
-                Validations.ValidaApellido(cliente.APELLIDOCLIENTE);
-                Validations.ValidaTelefono(cliente.TELEFONOCLIENTE);
-                Validations.ValidaDireccion(cliente.DIRECCLIENTE);
-                Validations.ValidaFecha(cliente.FECHANACCLIENTE ?? DateTime.Now);
-                Validations.VerificaInputStr(cliente.CEDULACLIENTE);
-                Validations.VerificaInputStr(cliente.NOMBRECLIENTE);
-                Validations.VerificaInputStr(cliente.APELLIDOCLIENTE);
-                Validations.VerificaInputStr(cliente.DIRECCLIENTE);
-                Validations.VerificaInputStr(cliente.TELEFONOCLIENTE);
-            }
-            catch (ArgumentException ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-            }
+            //try
+            //{
+            //    Validations.VerificaIdentificacion(cliente.CEDULACLIENTE);
+            //    Validations.ValidaNombre(cliente.NOMBRECLIENTE);
+            //    Validations.ValidaApellido(cliente.APELLIDOCLIENTE);
+            //    Validations.ValidaTelefono(cliente.TELEFONOCLIENTE);
+            //    Validations.ValidaDireccion(cliente.DIRECCLIENTE);
+            //    Validations.ValidaFecha(cliente.FECHANACCLIENTE ?? DateTime.Now);
+            //    Validations.VerificaInputStr(cliente.CEDULACLIENTE);
+            //    Validations.VerificaInputStr(cliente.NOMBRECLIENTE);
+            //    Validations.VerificaInputStr(cliente.APELLIDOCLIENTE);
+            //    Validations.VerificaInputStr(cliente.DIRECCLIENTE);
+            //    Validations.VerificaInputStr(cliente.TELEFONOCLIENTE);
+            //}
+            //catch (ArgumentException ex)
+            //{
+            //    ModelState.AddModelError("", ex.Message);
+            //}
 
             if (ModelState.IsValid)
             {
