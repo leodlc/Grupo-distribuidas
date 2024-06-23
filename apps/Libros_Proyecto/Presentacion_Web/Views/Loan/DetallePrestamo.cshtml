@@ -1,0 +1,181 @@
+﻿@model Data.PRESTAMO
+
+@{
+    ViewBag.Title = "Detalles del Préstamo";
+}
+
+<div class="content-wrapper">
+    <h2>Detalles del Préstamo</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <p><strong>Cliente:</strong> <span id="clienteNombre">Cargando...</span></p>
+            <p><strong>Cédula:</strong> <span id="clienteCedula">Cargando...</span></p>
+            <p><strong>Libro prestado:</strong> <span id="libroNombre">Cargando...</span></p>
+            <p><strong>Fecha de inicio del préstamo:</strong> <span id="FECHAINIPREST">@(Model.FECHAINIPREST?.ToString("yyyy-MM-dd") ?? "")</span></p>
+            <p><strong>Fecha de fin de préstamo:</strong> <span id="FECHAFINPREST">@(Model.FECHAFINPREST?.ToString("yyyy-MM-dd") ?? "")</span></p>
+            <p><strong>Descripción:</strong> <span id="DESCRPREST">@Model.DESCRPREST</span></p>
+            <p><strong>Tiempo Restante:</strong> <span id="tiempoRestante">Calculando...</span></p>
+            <p>
+                <span id="ESTADOPREST">
+                    @{
+                        bool estado = @Model.ESTADOPREST ?? false;
+                        string estadoTexto = estado ? "Activo" : "Finalizado";
+                    }
+                    @estadoTexto
+                </span>
+            </p>
+
+            <!-- Botón para abrir el modal de edición -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editarModal">
+                Editar Información
+            </button>
+
+            <!-- Modal de edición -->
+            <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editarModalLabel">Editar Detalles del Préstamo</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="editPrestamoForm">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="FECHAFINPREST"><strong>Fecha de finalización del préstamo:</strong></label>
+                                    <input type="date" class="form-control" id="FECHAFINPREST" name="FECHAFINPREST" value="@Model.FECHAFINPREST?.ToString(" yyyy-MM-dd")" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="DESCRPREST"><strong>Descripción:</strong></label>
+                                    <textarea class="form-control" id="DESCRPREST" name="DESCRPREST">@Model.DESCRPREST</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ESTADOPREST"><strong>Estado:</strong></label>
+                                    <select class="form-control" id="ESTADOPREST" name="ESTADOPREST">
+                                        <option value="true" @(Model.ESTADOPREST == true ? "selected" : "")>Activo</option>
+                                        <option value="false" @(Model.ESTADOPREST == false ? "selected" : "")>Finalizado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary" id="guardarCambiosBtn">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Agrega jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agrega los scripts de Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var clienteId = @Model.IDCLIENTE;
+        var libroId = @Model.IDLIBRO;
+
+        // Función para obtener y mostrar datos del cliente
+        function obtenerDatosCliente() {
+            $.ajax({
+                url: 'http://localhost:54845/api/client/GetById/' + clienteId,
+                type: 'GET',
+                success: function (data) {
+                    $('#clienteNombre').text(data.NOMBRECLIENTE + ' ' + data.APELLIDOCLIENTE);
+                    $('#clienteCedula').text(data.CEDULACLIENTE);
+                },
+                error: function () {
+                    $('#clienteNombre').text('Cliente no encontrado');
+                }
+            });
+        }
+
+        // Función para obtener y mostrar datos del libro
+        function obtenerDatosLibro() {
+            $.ajax({
+                url: 'http://localhost:54845/api/book/GetById/' + libroId,
+                type: 'GET',
+                success: function (data) {
+                    $('#libroNombre').text(data.NOMBRELIBRO);
+                },
+                error: function () {
+                    $('#libroNombre').text('Libro no encontrado');
+                }
+            });
+        }
+
+        // Función para calcular y mostrar el tiempo restante
+        function calcularYMostrarTiempoRestante(fechaFinPrestamo) {
+            var fechaFin = new Date(fechaFinPrestamo);
+            var ahora = new Date();
+
+            // Calcula la diferencia en milisegundos entre las fechas
+            var diferencia = fechaFin.getTime() - ahora.getTime();
+
+            // Calcula días, horas, minutos y segundos restantes
+            var dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            diferencia -= dias * (1000 * 60 * 60 * 24);
+            var horas = Math.floor(diferencia / (1000 * 60 * 60));
+            diferencia -= horas * (1000 * 60 * 60);
+            var minutos = Math.floor(diferencia / (1000 * 60));
+            diferencia -= minutos * (1000 * 60);
+            var segundos = Math.floor(diferencia / 1000);
+
+            // Formatea el texto para mostrar el tiempo restante
+            var tiempoRestanteTexto = dias + " días, " + horas + " horas, " + minutos + " minutos, " + segundos + " segundos";
+
+            // Muestra el tiempo restante en el elemento HTML correspondiente
+            $('#tiempoRestante').text(tiempoRestanteTexto);
+        }
+
+        // Inicialización: Obtener datos del cliente y del libro
+        obtenerDatosCliente();
+        obtenerDatosLibro();
+        calcularYMostrarTiempoRestante('@Model.FECHAFINPREST');
+
+        // Actualizar el tiempo restante cada segundo
+        setInterval(function () {
+            calcularYMostrarTiempoRestante('@Model.FECHAFINPREST');
+        }, 1000);
+
+        // Manejar el envío del formulario con AJAX para guardar cambios
+        $('#guardarCambiosBtn').click(function () {
+            var formData = $('#editPrestamoForm').serialize();
+
+            $.ajax({
+                url: 'http://localhost:54845/api/loan/Update/' + clienteId + '/' + libroId,
+                type: 'PUT',
+                data: formData,
+                success: function (data) {
+                    console.log(data); // Verifica la respuesta del servidor en la consola
+                    if (data) {
+                        alert('Cambios guardados exitosamente.');
+
+                        // Actualizar datos en la interfaz después de guardar
+                        $('#FECHAFINPREST').text(data.FECHAFINPREST ? new Date(data.FECHAFINPREST).toISOString().slice(0, 10) : ''); // Actualiza la fecha de fin si es necesario
+                        $('#DESCRPREST').text(data.DESCRPREST); // Actualiza la descripción si es necesario
+                        $('#ESTADOPREST').text(data.ESTADOPREST ? "Activo" : "Finalizado"); // Actualiza el estado si es necesario
+
+                        // Volver a calcular y mostrar el tiempo restante si es necesario
+                        calcularYMostrarTiempoRestante(data.FECHAFINPREST);
+                    } else {
+                        console.error('Error al guardar los cambios: Datos vacíos o no válidos');
+                        alert('Error al guardar los cambios: Datos vacíos o no válidos');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error en la solicitud AJAX:', error);
+                    alert('Error al guardar los cambios. Verifique la consola para más detalles.');
+                }
+            });
+        });
+    });
+</script>
+

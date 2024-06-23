@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculadoraWS_DeLaCadena_Ipiales_Quishpe", "CalculadoraWS_DeLaCadena_Ipiales_Quishpe.csproj", "{2A16C249-4F66-4F05-9926-A954DA16FFD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A16C249-4F66-4F05-9926-A954DA16FFD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A16C249-4F66-4F05-9926-A954DA16FFD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A16C249-4F66-4F05-9926-A954DA16FFD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A16C249-4F66-4F05-9926-A954DA16FFD3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA506C0D-6DF1-496D-9C48-D541A1DF8BE4}
+	EndGlobalSection
+EndGlobal

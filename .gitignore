@@ -1,0 +1,22 @@
+# Build Folders
+bin/
+obj/
+
+# Visual Studio
+.vs/
+.vscode/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.log
+*.tlog
+*.lastbuildstate
+
+# Ignorar todos los archivos y subdirectorios en BOOKS_WEB_SERVICE
+apps/SOAP-SERVER-CLIENT/BOOKS_WEB_SERVICE/*

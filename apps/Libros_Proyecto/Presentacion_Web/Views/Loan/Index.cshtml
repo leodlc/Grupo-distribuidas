@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Data.PRESTAMO>
+
+@Html.Partial("_NavBar")
+
+@{
+    ViewBag.Title = "Lista de Préstamos";
+}
+
+<div class="content-wrapper">
+    <div class="text-center mb-3">
+        <h2>Préstamos Registrados</h2>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createModal">Agregar Préstamo</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Cliente</th>
+                    <th>Libro</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prestamo in Model)
+                {
+                    <tr>
+                        <td data-idcliente="@prestamo.IDCLIENTE" class="cliente-name"></td>
+                        <td data-idlibro="@prestamo.IDLIBRO" class="libro-name"></td>
+                        <td>@(prestamo.FECHAINIPREST?.ToString("yyyy-MM-dd") ?? "")</td>
+                        <td>@(prestamo.FECHAFINPREST?.ToString("yyyy-MM-dd") ?? "")</td>
+                        <td>@prestamo.DESCRPREST</td>
+                        <td>
+                            @{
+                                bool estado = prestamo.ESTADOPREST ?? false;
+                                string estadoTexto = estado ? "Activo" : "Finalizado";
+                            }
+                            @estadoTexto
+                        </td>
+                        <td>
+                            <div class="actions-container">
+                                <a class="btn btn-outline-success btn-outline-success-custom"
+                                   href="@Url.Action("DetallePrestamo", "Loan", new { idCliente = prestamo.IDCLIENTE, idLibro = prestamo.IDLIBRO })">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#deleteModal">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para Crear -->
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="createModalLabel">Crear Préstamo</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_CrearPrestamoForm", new Data.PRESTAMO())
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agrega jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agrega los scripts de Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+        @*$('#guardarCambiosBtn').click(function () {
+            var formData = $('#editarPrestamoForm').serialize();
+
+            $.ajax({
+                url: '@Url.Action("Edit", "Loan")',
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    // Manejar la respuesta del servidor, por ejemplo cerrar el modal
+                    $('#editModal').modal('hide');
+                    // Actualizar la tabla u otra parte de la página si es necesario
+                    // Ejemplo: cargarNombresClientes(); cargarNombresLibros();
+                },
+                error: function () {
+                    alert('Error al guardar los cambios.');
+                }
+            });
+        });*@
+
+
+        function cargarNombresClientes() {
+            $('.cliente-name').each(function () {
+                var clienteId = $(this).data('idcliente');
+                var element = $(this);
+                $.ajax({
+                    url: 'http://localhost:54845/api/client/getbyid/' + clienteId,
+                    type: 'GET',
+                    success: function (data) {
+                        element.text(data.NOMBRECLIENTE + ' ' + data.APELLIDOCLIENTE);
+                    },
+                    error: function () {
+                        element.text('Cliente no encontrado');
+                    }
+                });
+            });
+        }
+
+
+
+        // Función para cargar los nombres de libros
+        function cargarNombresLibros() {
+            $('.libro-name').each(function () {
+                var libroId = $(this).data('idlibro');
+                var element = $(this);
+                $.ajax({
+                    url: 'http://localhost:54845/api/book/GetById/' + libroId,
+                    type: 'GET',
+                    success: function (data) {
+                        element.text(data.NOMBRELIBRO);
+                    },
+                    error: function () {
+                        element.text('Libro no encontrado');
+                    }
+                });
+            });
+        }
+
+        // Llamar a las funciones para cargar los nombres de clientes y libros al cargar la página
+        cargarNombresClientes();
+        cargarNombresLibros();
+
+
+    });
+</script>
