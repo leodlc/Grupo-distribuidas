@@ -103,62 +103,64 @@
             type: 'GET',
             data: { id: id },
             success: function (data) {
-                console.log(data)
                 modal.find('.modal-body').html(data);
-                //addValidationScripts();
+                addValidationScripts(modal);
             }
         });
     });
+
     $('#createModal').on('show.bs.modal', function (event) {
-        addValidationScripts(); // Agrega validaciones cuando se muestra el modal de creación
+        addValidationScripts($(this));
     });
 
-    function addValidationScripts() {
-        // Uso de un selector más específico para evitar conflictos
-        $('#createModal #NOMBRECLIENTE, #editModal #NOMBRECLIENTE').keypress(function (e) {
-            var charCode = e.which;
-            // Permite letras (mayúsculas y minúsculas) y espacios (charCode 32)
-            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32) {
-                return true;
-            } else {
-                return false;
+    function addValidationScripts(modal) {
+        // Validación del campo de Cédula al cambiar su valor
+        modal.find('#CEDULACLIENTE').change(function () {
+            var cedula = $(this).val().trim();
+            if (!verificaCedula(cedula)) {
+                alert('La cédula ingresada no es válida.');
+                $(this).val(''); // Borra el valor ingresado
             }
         });
 
-        $('#createModal #APELLIDOCLIENTE, #editModal #APELLIDOCLIENTE ').keypress(function (e) {
+        // Solo permite números en el campo de cédula
+        modal.find('#CEDULACLIENTE').keypress(function (e) {
             var charCode = e.which;
-            // Permite letras (mayúsculas y minúsculas), espacio y la letra "ñ" (charCode 241)
-            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32 || charCode == 241) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        $('#createModal #TELEFONOCLIENTE, #editModal #TELEFONOCLIENTE').keypress(function (e) {
-            var charCode = e.which;
-
             // Permite solamente números (0-9)
-            if (charCode >= 48 && charCode <= 57) {
-                return true; // permite la entrada del carácter
-            } else {
+            if (charCode < 48 || charCode > 57) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        // Validación de caracteres en los campos de Nombre y Apellido
+        modal.find('#NOMBRECLIENTE, #APELLIDOCLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), espacio y la letra "ñ"
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32 || charCode == 241 || charCode == 209)) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        // Solo permite números en el campo de teléfono
+        modal.find('#TELEFONOCLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite solamente números (0-9)
+            if (charCode < 48 || charCode > 57) {
                 e.preventDefault(); // evita la entrada del carácter
             }
         });
 
         // Validación del campo Dirección
-        $('#createModal #DIRECCLIENTE, #editModal #DIRECCLIENTE').keypress(function (e) {
+        modal.find('#DIRECCLIENTE').keypress(function (e) {
             var charCode = e.which;
             // Permite letras (mayúsculas y minúsculas), números, espacio, guiones, comas y slashes
-            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57) || charCode == 32 || charCode == 45 || charCode == 44 || charCode == 47) {
-                return true;
-            } else {
-                return false;
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57) || charCode == 32 || charCode == 45 || charCode == 44 || charCode == 47)) {
+                e.preventDefault(); // evita la entrada del carácter
             }
         });
 
         // Validación de la fecha al cambiar su valor
-        $('#createModal #FECHANACCLIENTE, #editModal #FECHANACCLIENTE').change(function () {
+        modal.find('#FECHANACCLIENTE').change(function () {
             var fechaNacimiento = $(this).val();
             var fechaIngresada = new Date(fechaNacimiento);
             var hoy = new Date();
@@ -174,18 +176,18 @@
             }
         });
 
-
         // Validación del formulario al momento de enviar
-        $('#createModal #clienteForm, #editModal #clienteForm').submit(function (e) {
-            var nombre = $('#NOMBRECLIENTE').val();
-            var apellido = $('#APELLIDOCLIENTE').val();
-            var telefono = $('#TELEFONOCLIENTE').val();
-            var direccion = $('#DIRECCLIENTE').val();
+        modal.find('form').submit(function (e) {
+            var nombre = modal.find('#NOMBRECLIENTE').val().trim();
+            var apellido = modal.find('#APELLIDOCLIENTE').val().trim();
+            var telefono = modal.find('#TELEFONOCLIENTE').val().trim();
+            var direccion = modal.find('#DIRECCLIENTE').val().trim();
+            var cedula = modal.find('#CEDULACLIENTE').val().trim();
 
-            var nombreError = $('#nombreError');
-            var apellidoError = $('#apellidoError');
-            var telefonoError = $('#telefonoError');
-            var direccionError = $('#direccionError');
+            var nombreError = modal.find('#nombreError');
+            var apellidoError = modal.find('#apellidoError');
+            var telefonoError = modal.find('#telefonoError');
+            var direccionError = modal.find('#direccionError');
 
             // Validación del campo Nombre
             var nombrePattern = /^[a-zA-Z\s]+$/;
@@ -206,9 +208,9 @@
             }
 
             // Validación del campo Teléfono
-            var telefonoPattern = /^[a-zA-Z0-9\s]+$/;
+            var telefonoPattern = /^[0-9]+$/;
             if (!telefonoPattern.test(telefono)) {
-                telefonoError.text('El teléfono solo puede contener letras y números.');
+                telefonoError.text('El teléfono solo puede contener números.');
                 e.preventDefault(); // Evita el envío del formulario
             } else {
                 telefonoError.text('');
@@ -223,7 +225,7 @@
                 direccionError.text('');
             }
 
-            var fechaNacimiento = $('#FECHANACCLIENTE').val();
+            var fechaNacimiento = modal.find('#FECHANACCLIENTE').val();
             var fechaIngresada = new Date(fechaNacimiento);
             var hoy = new Date();
 
@@ -237,7 +239,57 @@
                 e.preventDefault(); // Evita el envío del formulario
             }
         });
+    }
 
-       
+    // Función para verificar la cédula utilizando el algoritmo proporcionado
+    function verificaCedula(cedula) {
+        if (cedula.length < 10) {
+            return false;
+        }
+
+        if (!/^[0-9]+$/.test(cedula)) {
+            return false;
+        }
+
+        var provincia = parseInt(cedula.substr(0, 2));
+        if (provincia < 1 || provincia > 24) {
+            return false;
+        }
+
+        var digito3 = parseInt(cedula.charAt(2));
+        if (digito3 < 0 || digito3 > 5) {
+            return false;
+        }
+
+        return validaCedula(cedula);
+    }
+
+    // Función para validar la cédula según el algoritmo proporcionado
+    function validaCedula(cedula) {
+        var total = 0;
+        var longitud = cedula.length;
+        var digito = parseInt(cedula.charAt(longitud - 1));
+
+        for (var i = 0; i < longitud - 1; i++) {
+            var valor = parseInt(cedula.charAt(i));
+
+            if (i % 2 === 0) {
+                valor = valor * 2;
+                if (valor > 9) {
+                    valor = valor - 9;
+                }
+            }
+
+            total = total + valor;
+        }
+
+        var decenaSuperior = Math.ceil(total / 10) * 10;
+        var verificador = decenaSuperior - total;
+
+        if (verificador === 10) {
+            verificador = 0;
+        }
+
+        return verificador === digito;
     }
 </script>
