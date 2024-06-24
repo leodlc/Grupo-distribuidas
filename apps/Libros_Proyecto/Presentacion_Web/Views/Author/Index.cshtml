@@ -85,7 +85,7 @@
     <!-- Agrega los scripts de Bootstrap -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script>
+<script>
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
@@ -97,7 +97,44 @@
             data: { id: id },
             success: function (data) {
                 modal.find('.modal-body').html(data);
+                addValidationScripts(modal);
             }
         });
     });
-    </script>
+    $('#createModal').on('show.bs.modal', function (event) {
+        addValidationScripts($(this));
+    });
+
+    function addValidationScripts(modal) {
+
+        // Validación de caracteres en los campos de Nombre y Apellido
+        modal.find('#NOMBREAUTOR, #APELLIDOAUTOR, NACIONALIDADAUTOR').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), espacio y la letra "ñ"
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32 || charCode == 241 || charCode == 209)) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+        // Validación de caracteres en el campo de Biografía
+        modal.find('#BIOGRAFIAAUTOR').keypress(function (e) {
+            var charCode = e.which;
+            // Permitir letras, números, espacios y algunos signos de puntuación básicos
+            if (!((charCode >= 65 && charCode <= 90) ||
+                (charCode >= 97 && charCode <= 122) ||
+                (charCode >= 48 && charCode <= 57) ||
+                charCode == 32 || // espacio
+                charCode == 46 || // punto
+                charCode == 44 || // coma
+                charCode == 33 || // exclamación
+                charCode == 63 || // interrogación
+                charCode == 241 || // ñ minúscula
+                charCode == 209 || // Ñ mayúscula
+                charCode == 39 || // comilla simple
+                charCode == 45)) { // guion
+                e.preventDefault(); // Evita la entrada del carácter
+            }
+        });
+
+       
+    }
+</script>
