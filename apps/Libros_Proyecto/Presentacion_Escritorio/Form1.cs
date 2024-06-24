@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Net.Http;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace Presentacion_Escritorio
 {
@@ -12,7 +11,11 @@ namespace Presentacion_Escritorio
     {
         private Panel mainPanel;
         private DataGridView dataGridView;
-        private const string BaseUrl = "http://localhost:54845/";
+        private BookService bookService;
+        private LoanService loanService;
+        private ClientService clientService; // Nueva instancia de ClientService
+        private LiteraryGenreService literaryGenreService;
+        private AuthorService authorService;
 
         private Button btnHome;
         private Button btnLoans;
@@ -24,19 +27,24 @@ namespace Presentacion_Escritorio
         public Form1()
         {
             InitializeComponent();
+            bookService = new BookService();
+            loanService = new LoanService();
+            clientService = new ClientService(); // Inicializar ClientService
+            literaryGenreService = new LiteraryGenreService();
+            authorService = new AuthorService();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             InitializeCustomComponents();
-            LoadHomePage(); // Cargar la página de inicio inicialmente
+            LoadHomePage();
         }
 
         private void InitializeCustomComponents()
         {
-            // Configuración del TableLayoutPanel
             var tableLayoutPanel = new TableLayoutPanel
             {
+                //Size = new System.Drawing.Size(1280, 720),
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
                 RowCount = 1
@@ -45,17 +53,13 @@ namespace Presentacion_Escritorio
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
-            // Configuración del Panel del Menú Lateral
             var menuPanel = CreateMenuPanel();
 
-            // Configuración del Panel Principal
             mainPanel = new Panel { Dock = DockStyle.Fill, BackColor = Color.White };
 
-            // Agregar Paneles al TableLayoutPanel
             tableLayoutPanel.Controls.Add(menuPanel, 0, 0);
             tableLayoutPanel.Controls.Add(mainPanel, 1, 0);
 
-            // Agregar TableLayoutPanel al Formulario
             this.Controls.Add(tableLayoutPanel);
         }
 
@@ -67,17 +71,16 @@ namespace Presentacion_Escritorio
                 BackColor = Color.WhiteSmoke
             };
 
-            // Agregar logo primero
             var pictureBoxLogo = new PictureBox
             {
-                ImageLocation = "C:\\Users\\Shadow Moon\\OneDrive\\Escritorio\\Grupo-distribuidas\\apps\\Libros_Proyecto\\images\\logo.jpg",
+                ImageLocation = "C:\\Users\\UsuarioLVD\\Downloads\\capi.png",
+                //ImageLocation = "C:\\Users\\Shadow Moon\\OneDrive\\Escritorio\\Grupo-distribuidas\\apps\\Libros_Proyecto\\images\\logo.jpg",
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Height = 100,
                 Dock = DockStyle.Top
             };
             menuPanel.Controls.Add(pictureBoxLogo);
 
-            // Crear y agregar botones del menú en el orden correcto
             btnHome = CreateMenuButton("INICIO", Color.DarkGreen);
             btnLoans = CreateMenuButton("PRÉSTAMOS", Color.Gray);
             btnBooks = CreateMenuButton("LIBROS", Color.Gray);
@@ -85,15 +88,13 @@ namespace Presentacion_Escritorio
             btnGenres = CreateMenuButton("GÉNEROS LITERARIOS", Color.Gray);
             btnAuthors = CreateMenuButton("AUTORES", Color.Gray);
 
-            // Asignar eventos Click a los botones
             btnHome.Click += (sender, e) => LoadHomePage();
             btnLoans.Click += (sender, e) => LoadLoanPage();
             btnBooks.Click += (sender, e) => LoadBooksPage();
-            btnClients.Click += MenuButton_Click;
-            btnGenres.Click += MenuButton_Click;
-            btnAuthors.Click += MenuButton_Click;
+            btnClients.Click += (sender, e) => LoadClientsPage();
+            btnGenres.Click += (sender, e) => LoadGenresPage();
+            btnAuthors.Click += (sender, e) => LoadAuthorsPage();
 
-            // Agregar los botones al panel en el orden correcto
             menuPanel.Controls.Add(btnAuthors);
             menuPanel.Controls.Add(btnGenres);
             menuPanel.Controls.Add(btnClients);
@@ -106,7 +107,7 @@ namespace Presentacion_Escritorio
 
         private Button CreateMenuButton(string text, Color backColor)
         {
-            return new Button
+            var button = new Button
             {
                 Text = text,
                 Dock = DockStyle.Top,
@@ -115,6 +116,7 @@ namespace Presentacion_Escritorio
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
+            return button;
         }
 
         private void UpdateMenuButtonStyles(Button activeButton)
@@ -137,7 +139,6 @@ namespace Presentacion_Escritorio
 
         private void LoadHomePage()
         {
-            // Lógica para cargar la página de inicio
             mainPanel.Controls.Clear();
             var homeLabel = new Label
             {
@@ -152,7 +153,6 @@ namespace Presentacion_Escritorio
 
         private void LoadLoanPage()
         {
-            // Lógica para cargar la página de préstamos
             mainPanel.Controls.Clear();
 
             var btnAddLoan = new Button
@@ -206,7 +206,8 @@ namespace Presentacion_Escritorio
 
             dataGridView = new DataGridView
             {
-                Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 100),
+                Size = new System.Drawing.Size(740, 600),
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             mainPanel.Controls.Add(dataGridView);
@@ -215,9 +216,29 @@ namespace Presentacion_Escritorio
             UpdateMenuButtonStyles(btnLoans);
         }
 
-        private void LoadBooksPage()
+        private async void LoadAllLoans()
         {
-            // Lógica para cargar la página de libros
+            try
+            {
+                var loans = await loanService.GetLoansAsync();
+                if (loans != null && loans.Any())
+                {
+                    dataGridView.DataSource = null;
+                    dataGridView.DataSource = loans;
+                }
+                else
+                {
+                    dataGridView.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error loading loans: " + ex.Message);
+            }
+        }
+
+        private async void LoadBooksPage()
+        {
             mainPanel.Controls.Clear();
 
             var btnAddBook = new Button
@@ -234,29 +255,27 @@ namespace Presentacion_Escritorio
 
             var booksPanel = new FlowLayoutPanel
             {
-                Dock = DockStyle.Fill,
+                //Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
                 AutoScroll = true
             };
             mainPanel.Controls.Add(booksPanel);
 
-            LoadAllBooks(booksPanel);
+            await LoadAllBooks(booksPanel);
             UpdateMenuButtonStyles(btnBooks);
         }
 
-        private async void LoadAllBooks(FlowLayoutPanel booksPanel)
+        private async Task LoadAllBooks(FlowLayoutPanel booksPanel)
         {
-            var books = await GetBooksAsync();
-            DisplayBooks(booksPanel, books);
-        }
-
-        private async Task<List<Book>> GetBooksAsync()
-        {
-            using (var client = new HttpClient())
+            try
             {
-                var response = await client.GetAsync(BaseUrl + "api/Book/GetAll");
-                response.EnsureSuccessStatusCode();
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<Book>>(json);
+                var books = await bookService.GetBooksAsync();
+                DisplayBooks(booksPanel, books);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error loading books: " + ex.Message);
             }
         }
 
@@ -275,13 +294,13 @@ namespace Presentacion_Escritorio
             var panel = new Panel
             {
                 Width = 200,
-                Height = 300,
-                Margin = new Padding(10)
+                Height = 450,
+                Margin = new Padding(10),
             };
 
             var pictureBox = new PictureBox
             {
-                ImageLocation = book.ImageUrl,
+                ImageLocation = book.IMGLIBRO,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Width = 180,
                 Height = 200,
@@ -291,7 +310,7 @@ namespace Presentacion_Escritorio
 
             var lblTitle = new Label
             {
-                Text = book.Title,
+                Text = book.NOMBRELIBRO,
                 Dock = DockStyle.Top,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Arial", 12, FontStyle.Bold)
@@ -300,7 +319,7 @@ namespace Presentacion_Escritorio
 
             var lblAuthor = new Label
             {
-                Text = "Autor: " + book.Author,
+                Text = "Autor: " + book.AUTOR,
                 Dock = DockStyle.Top,
                 TextAlign = ContentAlignment.MiddleCenter
             };
@@ -308,7 +327,7 @@ namespace Presentacion_Escritorio
 
             var lblYear = new Label
             {
-                Text = "Año: " + book.Year,
+                Text = "Año: " + book.ANIOPUBLIBRO.ToString("yyyy"),
                 Dock = DockStyle.Top,
                 TextAlign = ContentAlignment.MiddleCenter
             };
@@ -319,18 +338,22 @@ namespace Presentacion_Escritorio
 
         private async Task BtnSearch_Click(object sender, EventArgs e, string clientId)
         {
-            var loans = await GetLoansByClientIdAsync(clientId);
-            dataGridView.DataSource = loans;
-        }
-
-        private async Task<List<Loan>> GetLoansByClientIdAsync(string clientId)
-        {
-            using (var client = new HttpClient())
+            try
             {
-                var response = await client.GetAsync(BaseUrl + $"api/Loan/GetByClient/{clientId}");
-                response.EnsureSuccessStatusCode();
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<Loan>>(json);
+                var loans = await loanService.GetLoansByClientIdAsync(clientId);
+                if (loans != null && loans.Any())
+                {
+                    dataGridView.DataSource = null;
+                    dataGridView.DataSource = loans;
+                }
+                else
+                {
+                    dataGridView.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error searching loans: " + ex.Message);
             }
         }
 
@@ -340,26 +363,24 @@ namespace Presentacion_Escritorio
             addLoanForm.ShowDialog();
         }
 
-        private void BtnAddBook_Click(object sender, EventArgs e)
+        private async void BtnAddBook_Click(object sender, EventArgs e)
         {
-            // Lógica para añadir un libro
-            MessageBox.Show("Añadir Libro");
-        }
+            var addBookForm = new AddBookForm();
+            var result = addBookForm.ShowDialog();
 
-        private async void LoadAllLoans()
-        {
-            var loans = await GetLoansAsync();
-            dataGridView.DataSource = loans;
-        }
-
-        private async Task<List<Loan>> GetLoansAsync()
-        {
-            using (var client = new HttpClient())
+            if (result == DialogResult.OK)
             {
-                var response = await client.GetAsync(BaseUrl + "api/Loan/GetAll");
-                response.EnsureSuccessStatusCode();
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<Loan>>(json);
+                var newBook = addBookForm.NewBook;
+                var confirmation = MessageBox.Show(
+                    $"Nombre: {newBook.NOMBRELIBRO}\nAutor: {newBook.AUTOR}\nGénero Literario: {newBook.GENEROLITERARIO}\nAño: {newBook.ANIOPUBLIBRO}\nURL de Imagen: {newBook.IMGLIBRO}\nISBN: {newBook.ISBNLIBRO}\nEditorial: {newBook.EDITORIALLIBRO}\nStock: {newBook.STOCKLIBRO}",
+                    "Confirmar Datos",
+                    MessageBoxButtons.OKCancel);
+
+                if (confirmation == DialogResult.OK)
+                {
+                    await bookService.AddBookAsync(newBook);
+                    LoadBooksPage();
+                }
             }
         }
 
@@ -385,23 +406,223 @@ namespace Presentacion_Escritorio
             };
         }
 
-        private void MenuButton_Click(object sender, EventArgs e)
+        private void LoadClientsPage()
         {
-            var button = sender as Button;
-            if (button != null)
+            mainPanel.Controls.Clear();
+
+            var btnAddClient = new Button
             {
-                // Manejar la lógica de cambio de contenido aquí según el botón presionado
-                MessageBox.Show($"Botón {button.Text} presionado.");
+                Text = "Añadir Cliente",
+                Dock = DockStyle.Top,
+                Height = 40,
+                BackColor = Color.DarkGreen,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnAddClient.Click += BtnAddClient_Click;
+            mainPanel.Controls.Add(btnAddClient);
+
+            dataGridView = new DataGridView
+            {
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+            mainPanel.Controls.Add(dataGridView);
+
+            LoadAllClients();
+            UpdateMenuButtonStyles(btnClients);
+        }
+
+        private async void LoadAllClients()
+        {
+            try
+            {
+                var clients = await clientService.GetClientsAsync();
+                if (clients != null && clients.Any())
+                {
+                    // Imprimir los datos de los clientes en la consola
+                    foreach (var client in clients)
+                    {
+                        Console.WriteLine($"ID: {client.IDCLIENTE}, Cédula: {client.CEDULACLIENTE}, Nombre: {client.NOMBRECLIENTE}, Apellido: {client.APELLIDOCLIENTE}, Teléfono: {client.TELEFONOCLIENTE}, Dirección: {client.DIRECCLIENTE}, Fecha de Nacimiento: {client.FECHANACCLIENTE}, Estado: {client.ESTADOCLIENTE}");
+                    }
+
+                    dataGridView.DataSource = null;
+                    dataGridView.DataSource = clients;
+                }
+                else
+                {
+                    dataGridView.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error loading clients: " + ex.Message);
             }
         }
-    }
 
-    public class Loan
-    {
-        public int Id { get; set; }
-        public int ClientId { get; set; }
-        public int BookId { get; set; }
-        public DateTime LoanDate { get; set; }
-        public DateTime ReturnDate { get; set; }
+
+        private async void BtnAddClient_Click(object sender, EventArgs e)
+        {
+            var addClientForm = new AddClientForm();
+            var result = addClientForm.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                var newClient = addClientForm.NewClient;
+                var confirmation = MessageBox.Show(
+                    $"Nombre: {newClient.NOMBRECLIENTE}\nApellido: {newClient.APELLIDOCLIENTE}\nCédula: {newClient.CEDULACLIENTE}\nTeléfono: {newClient.TELEFONOCLIENTE}\nDirección: {newClient.DIRECCLIENTE}\nFecha de Nacimiento: {newClient.FECHANACCLIENTE}\nEstado: {newClient.ESTADOCLIENTE}",
+                    "Confirmar Datos",
+                    MessageBoxButtons.OKCancel);
+
+                if (confirmation == DialogResult.OK)
+                {
+                    await clientService.AddClientAsync(newClient);
+                    LoadClientsPage();
+                }
+            }
+        }
+
+
+        private void LoadGenresPage()
+        {
+            mainPanel.Controls.Clear();
+
+            var btnAddGenre = new Button
+            {
+                Text = "Añadir Género Literario",
+                Dock = DockStyle.Top,
+                Height = 40,
+                BackColor = Color.DarkGreen,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnAddGenre.Click += BtnAddGenre_Click;
+            mainPanel.Controls.Add(btnAddGenre);
+
+            dataGridView = new DataGridView
+            {
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+            mainPanel.Controls.Add(dataGridView);
+
+            LoadAllGenres();
+            UpdateMenuButtonStyles(btnGenres);
+        }
+
+        private async void LoadAllGenres()
+        {
+            try
+            {
+                var genres = await literaryGenreService.GetLiteraryGenresAsync();
+                if (genres != null && genres.Any())
+                {
+                    dataGridView.DataSource = null;
+                    dataGridView.DataSource = genres;
+                }
+                else
+                {
+                    dataGridView.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error loading genres: " + ex.Message);
+            }
+        }
+
+        private async void BtnAddGenre_Click(object sender, EventArgs e)
+        {
+            var addGenreForm = new AddGenreForm();
+            var result = addGenreForm.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                var newGenre = addGenreForm.NewGenre;
+                var confirmation = MessageBox.Show(
+                    $"Nombre: {newGenre.NOMBREGL}\nDescripción: {newGenre.DESCRIPGL}",
+                    "Confirmar Datos",
+                    MessageBoxButtons.OKCancel);
+
+                if (confirmation == DialogResult.OK)
+                {
+                    await literaryGenreService.AddLiteraryGenreAsync(newGenre);
+                    LoadGenresPage();
+                }
+            }
+        }
+
+        private void LoadAuthorsPage()
+        {
+            mainPanel.Controls.Clear();
+
+            var btnAddAuthor = new Button
+            {
+                Text = "Añadir Autor",
+                Dock = DockStyle.Top,
+                Height = 40,
+                BackColor = Color.DarkGreen,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnAddAuthor.Click += BtnAddAuthor_Click;
+            mainPanel.Controls.Add(btnAddAuthor);
+
+            dataGridView = new DataGridView
+            {
+                //Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 50),
+                Size = new System.Drawing.Size(740, 600),
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+            mainPanel.Controls.Add(dataGridView);
+
+            LoadAllAuthors();
+            UpdateMenuButtonStyles(btnAuthors);
+        }
+
+        private async void LoadAllAuthors()
+        {
+            try
+            {
+                var authors = await authorService.GetAuthorsAsync();
+                if (authors != null && authors.Any())
+                {
+                    dataGridView.DataSource = null;
+                    dataGridView.DataSource = authors;
+                }
+                else
+                {
+                    dataGridView.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error loading authors: " + ex.Message);
+            }
+        }
+
+        private async void BtnAddAuthor_Click(object sender, EventArgs e)
+        {
+            var addAuthorForm = new AddAuthorForm();
+            var result = addAuthorForm.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                var newAuthor = addAuthorForm.NewAuthor;
+                var confirmation = MessageBox.Show(
+                    $"Nombre: {newAuthor.NOMBREAUTOR}\nApellido: {newAuthor.APELLIDOAUTOR}\nNacionalidad: {newAuthor.NACIONALIDADAUTOR}\nBiografía: {newAuthor.BIOGRAFIAAUTOR}",
+                    "Confirmar Datos",
+                    MessageBoxButtons.OKCancel);
+
+                if (confirmation == DialogResult.OK)
+                {
+                    await authorService.AddAuthorAsync(newAuthor);
+                    LoadAuthorsPage();
+                }
+            }
+        }
     }
 }
