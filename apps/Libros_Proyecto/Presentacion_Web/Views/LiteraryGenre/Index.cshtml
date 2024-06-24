@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<Data.GENEROLITERARIO>
+﻿@model IEnumerable<Data.GENEROLITERARIO>
 
 @Html.Partial("_NavBar")
 
@@ -33,8 +32,8 @@
                             <div>
                                 <button type="button" class="btn btn-outline-success btn-outline-success-custom" data-toggle="modal" data-target="#editModal" data-id="@genre.IDGL"><i class="fas fa-edit"></i></button>
                                 @*<button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#deleteModal">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>*@
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>*@
 
                             </div>
                         </td>
@@ -87,6 +86,7 @@
 
 <script>
     $('#editModal').on('show.bs.modal', function (event) {
+
         var button = $(event.relatedTarget);
         var id = button.data('id');
 
@@ -97,9 +97,67 @@
             data: { id: id },
             success: function (data) {
                 modal.find('.modal-body').html(data);
+                addValidationScripts(); // Asegura que las validaciones se agreguen después de que el formulario se haya cargado
             }
+
         });
     });
+
+    $('#createModal').on('show.bs.modal', function (event) {
+        addValidationScripts(); // Agrega validaciones cuando se muestra el modal de creación
+    });
+
+    function addValidationScripts() {
+        // Uso de un selector más específico para evitar conflictos
+        $('#createModal #NOMBREGL, #editModal #NOMBREGL').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas) y espacios (charCode 32)
+            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#createModal #DESCRIPGL, #editModal #DESCRIPGL').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras, números, espacios, comillas y comas
+            if ((charCode >= 65 && charCode <= 90) || // Letras mayúsculas
+                (charCode >= 97 && charCode <= 122) || // Letras minúsculas
+                (charCode >= 48 && charCode <= 57) || // Números
+                charCode == 32 || // Espacio
+                charCode == 34 || // Comillas dobles (")
+                charCode == 44) { // Coma (,)
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#createModal #generoForm, #editModal #generoForm').submit(function (e) {
+            var formId = $(this).closest('.modal').attr('id');
+            var nombre = $('#' + formId + ' #NOMBREGL').val();
+            var descripcion = $('#' + formId + ' #DESCRIPGL').val();
+            var nombreError = $('#' + formId + ' #nombreError');
+            var descripcionError = $('#' + formId + ' #descripcionError');
+
+            // Validación del campo Nombre
+            var nombrePattern = /^[a-zA-Z\s]+$/;
+            if (!nombrePattern.test(nombre)) {
+                nombreError.text('El nombre solo puede contener letras y espacios.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                nombreError.text('');
+            }
+
+            // Validación del campo Descripción
+            var descripcionPattern = /^[a-zA-Z0-9\s",]+$/;
+            if (!descripcionPattern.test(descripcion)) {
+                descripcionError.text('La descripción solo puede contener letras, números, espacios, comillas y comas.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                descripcionError.text('');
+            }
+        });
+    }
 </script>
-
-

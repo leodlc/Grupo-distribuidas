@@ -105,6 +105,7 @@
                 success: function (data) {
                     var select = $('#IDAUTOR');
                     select.empty();
+                    console.log(data);
                     select.append($('<option>').text('Seleccione un autor...').attr('value', ''));
                     $.each(data, function (index, autor) {
                         var optionText = autor.NOMBREAUTOR + " " + autor.APELLIDOAUTOR;
@@ -125,6 +126,7 @@
                 success: function (data) {
                     var select = $('#IDGL');
                     select.empty();
+                    console.log(data);
                     select.append($('<option>').text('Seleccione un género...').attr('value', ''));
                     $.each(data, function (index, genero) {
                         select.append($('<option>').text(genero.NOMBREGL).attr('value', genero.IDGL));

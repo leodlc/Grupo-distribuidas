@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-8">
             <p><strong>Autor:</strong> <span id="autorNombre">Cargando...</span></p>
-            <p><strong>Año de Publicación:</strong> @Model.ANIOPUBLIBRO</p>
+            <p><strong>Año de Publicación:</strong> @(Model.ANIOPUBLIBRO?.ToString("yyyy-MM-dd") ?? "")</p>
             <p><strong>ISBN:</strong> @Model.ISBNLIBRO</p>
             <p><strong>Estado:</strong> @Model.ESTADOLIBRO</p>
             <p><strong>Editorial:</strong> @Model.EDITORIALLIBRO</p>
@@ -72,8 +72,44 @@
             data: { id: id },
             success: function (data) {
                 modal.find('.modal-body').html(data);
+                //addValidationScripts()
             }
         });
     });
+
+    function addValidationScripts() {
+        // Uso de un selector más específico para evitar conflictos
+        $('#editModal #NOMBRELIBRO').keypress(function (e) {
+            var charCode = e.which;
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), números, espacio, guiones, comas y slashes
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57) || charCode == 32 || charCode == 45 || charCode == 44 || charCode == 47)) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        $('#editModal #EDITORIALLIBRO').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras, números, espacios, comillas y comas
+            if ((charCode >= 65 && charCode <= 90) || // Letras mayúsculas
+                (charCode >= 97 && charCode <= 122) || // Letras minúsculas
+                (charCode >= 48 && charCode <= 57) || // Números
+                charCode == 32 || // Espacio
+                charCode == 34 || // Comillas dobles (")
+                charCode == 44) { // Coma (,)
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#editModal #STOCKLIBRO').keypress(function (e) {
+            var charCode = e.which;
+            // Permite solamente números (0-9)
+            if (charCode < 48 || charCode > 57) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+    }
 </script>
 

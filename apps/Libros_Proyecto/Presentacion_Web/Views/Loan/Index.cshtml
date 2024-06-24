@@ -148,7 +148,33 @@
         // Llamar a las funciones para cargar los nombres de clientes y libros al cargar la página
         cargarNombresClientes();
         cargarNombresLibros();
+        addValidationScripts();
 
 
     });
+
+
+    //$('#createModal').on('show.bs.modal', function (event) {
+    //    addValidationScripts($(this));
+    //});
+
+    function addValidationScripts() {
+       
+        $('#createModal #DESCRPREST').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras, números, espacios, comillas y comas
+            if ((charCode >= 65 && charCode <= 90) || // Letras mayúsculas
+                (charCode >= 97 && charCode <= 122) || // Letras minúsculas
+                (charCode >= 48 && charCode <= 57) || // Números
+                charCode == 32 || // Espacio
+                charCode == 34 || // Comillas dobles (")
+                charCode == 44) { // Coma (,)
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        
+    }
 </script>
