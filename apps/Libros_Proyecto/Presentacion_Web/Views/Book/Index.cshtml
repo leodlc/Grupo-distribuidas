@@ -101,7 +101,48 @@
             data: { id: id },
             success: function (data) {
                 modal.find('.modal-body').html(data);
+                
             }
         });
     });
+
+    $('#createModal').on('show.bs.modal', function (event) {
+        $('#createModal #STOCKLIBRO').val(0);
+        addValidationScripts(); // Agrega validaciones cuando se muestra el modal de creación
+    });
+
+    function addValidationScripts() {
+        // Uso de un selector más específico para evitar conflictos
+        $('#createModal #NOMBRELIBRO, #editModal #NOMBRELIBRO').keypress(function (e) {
+            var charCode = e.which;
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), números, espacio, guiones, comas y slashes
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57) || charCode == 32 || charCode == 45 || charCode == 44 || charCode == 47)) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        $('#createModal #EDITORIALLIBRO, #editModal #EDITORIALLIBRO').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras, números, espacios, comillas y comas
+            if ((charCode >= 65 && charCode <= 90) || // Letras mayúsculas
+                (charCode >= 97 && charCode <= 122) || // Letras minúsculas
+                (charCode >= 48 && charCode <= 57) || // Números
+                charCode == 32 || // Espacio
+                charCode == 34 || // Comillas dobles (")
+                charCode == 44) { // Coma (,)
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#createModal #STOCKLIBRO, #editModal #STOCKLIBRO').keypress(function (e) {
+            var charCode = e.which;
+            // Permite solamente números (0-9)
+            if (charCode < 48 || charCode > 57) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+    }
 </script>
