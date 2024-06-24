@@ -99,7 +99,7 @@
     $(document).ready(function () {
         function cargarAutoresDisponibles() {
             $.ajax({
-                url: 'http://localhost:54845/api/Author/GetAll', // Cambia esta URL según sea necesario
+                url: 'http://localhost:54845/api/Author/GetAll',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -117,10 +117,9 @@
             });
         }
 
-        // Función para cargar los géneros disponibles desde una URL
         function cargarGenerosDisponibles() {
             $.ajax({
-                url: 'http://localhost:54845/api/LiteraryGenre/GetAll', // Cambia esta URL según sea necesario
+                url: 'http://localhost:54845/api/LiteraryGenre/GetAll',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -139,6 +138,7 @@
 
         cargarAutoresDisponibles();
         cargarGenerosDisponibles();
+
 
         $('#libroForm').on('submit', function (event) {
             event.preventDefault();
