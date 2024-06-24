@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Data;
@@ -92,13 +93,22 @@ namespace Presentacion_Web.Controllers
             return View(prestamo);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int idCliente, int idLibro)
+        public async Task<JsonResult> DeleteConfirmed(int idCliente, int idLibro)
         {
-            await _loanService.DeleteLoanAsync(idCliente, idLibro);
-            return RedirectToAction("Index");
+            try
+            {
+                await _loanService.DeleteLoanAsync(idCliente, idLibro);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Maneja la excepción según sea necesario
+                return Json(new { success = false, message = ex.Message });
+            }
         }
+
 
         public async Task<JsonResult> GetClientesDisponibles()
         {
@@ -130,5 +140,7 @@ namespace Presentacion_Web.Controllers
             }
             return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
         }
+
+
     }
 }
